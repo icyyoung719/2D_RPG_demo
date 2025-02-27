@@ -5,8 +5,8 @@ Player::Player(std::map<State, Animation> &animations, float speed):animations(a
     state = State::Idle;
     faceRight = true;
 
-    body.setOrigin(body.getSize() / 2.0f);
     body.setSize(sf::Vector2f(96.0f, 96.0f));
+    body.setOrigin(body.getSize() / 2.0f);
     body.setPosition({100.0f, 100.0f});
     body.setTexture(animations[state].getTexture());
 }
@@ -23,6 +23,10 @@ void Player::Update(float deltaTime)
         movement.x -= speed * deltaTime;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
         movement.x += speed * deltaTime;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
+        movement.y -= speed * deltaTime;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
+        movement.y += speed * deltaTime;
 
     if(movement.x == 0.0f)
         state = State::Idle;
