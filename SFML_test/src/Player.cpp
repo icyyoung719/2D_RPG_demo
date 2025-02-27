@@ -4,11 +4,15 @@ Player::Player(std::map<State, Animation> &animations, float speed):animations(a
 {
     state = State::Idle;
     faceRight = true;
+    
+    // resize to 4 times larger
+    sf::Vector2f actualSize(16.0f*4, 24.0f*4);
 
-    body.setOrigin(body.getSize() / 2.0f);
-    body.setSize(sf::Vector2f(96.0f, 96.0f));
-    body.setPosition({100.0f, 100.0f});
+    body.setSize(actualSize);
+    // body.setScale(sf::Vector2f{4.0f,4.0f});
     body.setTexture(animations[state].getTexture());
+    body.setOrigin(actualSize / 2.0f);
+    body.setPosition({100.0f, 100.0f});
 }
 
 Player::~Player()
@@ -23,6 +27,10 @@ void Player::Update(float deltaTime)
         movement.x -= speed * deltaTime;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
         movement.x += speed * deltaTime;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
+        movement.y -= speed * deltaTime;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
+        movement.y += speed * deltaTime;
 
     if(movement.x == 0.0f)
         state = State::Idle;
@@ -37,7 +45,7 @@ void Player::Update(float deltaTime)
     }
     animations[state].Update(0, deltaTime, faceRight);
     body.setTexture(animations[state].getTexture());
-    body.setTextureRect(animations[state].uvRect);
+    body.setTextureRect(animations[state].textureRealUvRect);
     body.move(movement);
 }
 

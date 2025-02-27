@@ -4,7 +4,7 @@
 class Animation
 {
 public:
-    Animation(sf::Texture* texture, sf::Vector2u imageCount, float switchTime);
+    Animation(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, sf::Vector2i position, sf::Vector2i size);
     Animation();
     ~Animation();
 
@@ -15,7 +15,10 @@ private:
     
 
 public:
-    sf::IntRect uvRect;
+    // determine the position and size of the texture(despites the real size of the texture)
+    sf::IntRect standardUvRect;
+    // real model size after removing the transparent part
+    sf::IntRect textureRealUvRect;
 
 private:
     sf::Vector2u imageCount;

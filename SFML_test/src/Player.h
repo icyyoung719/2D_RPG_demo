@@ -5,6 +5,7 @@
 #include <SFML\Graphics.hpp>
 
 #include "Animation.h"
+#include "Collider.h"
 
 class Player
 {
@@ -18,13 +19,14 @@ public:
         Flying
     };
     
-    //Player(std::map<State, sf::Texture*> &stateTextureMap, sf::Vector2u imageCount, float switchTime, float speed);
     Player(std::map<State, Animation> &animations, float speed);
     ~Player();
 
     void Update(float deltaTime);
     void Draw(sf::RenderWindow& window);
+
     sf::Vector2f GetPosition() { return body.getPosition(); }
+    Collider GetCollider() { return Collider(body); }
 private:
     sf::RectangleShape body;
     // 每个State对应一个Animation

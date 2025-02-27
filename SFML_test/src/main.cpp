@@ -9,6 +9,7 @@
 
 #include "Animation.h"
 #include "Player.h"
+#include "Platform.h"
 
 using namespace std;
 
@@ -35,11 +36,11 @@ int main() {
 		std::cerr << "Error loading texture" << std::endl;
 		return -1;
 	}
-	Animation idleAnimation(&idleTexture, sf::Vector2u(6, 1), 0.3f);
-	Animation walkAnimation(&walkTexture, sf::Vector2u(8, 1), 0.3f);
-	Animation jumpAnimation(&jumpTexture, sf::Vector2u(3, 1), 0.3f);
-	Animation runAnimation(&runTexture, sf::Vector2u(6, 1), 0.3f);
-	Animation flyingAnimation(&flyingTexture, sf::Vector2u(2, 1), 0.3f);
+	Animation idleAnimation(&idleTexture, sf::Vector2u(6, 1), 0.3f, sf::Vector2i(8, 8), sf::Vector2i(16, 24));
+	Animation walkAnimation(&walkTexture, sf::Vector2u(8, 1), 0.3f, sf::Vector2i(8, 8), sf::Vector2i(16, 24));
+	Animation jumpAnimation(&jumpTexture, sf::Vector2u(3, 1), 0.3f, sf::Vector2i(8, 8), sf::Vector2i(16, 24));
+	Animation runAnimation(&runTexture, sf::Vector2u(6, 1), 0.3f, sf::Vector2i(8, 8), sf::Vector2i(16, 24));
+	Animation flyingAnimation(&flyingTexture, sf::Vector2u(2, 1), 0.3f, sf::Vector2i(8, 8), sf::Vector2i(16, 24));
 
 	std::map<Player::State, Animation> stateAnimationMap = {
 		{Player::State::Idle, idleAnimation},
@@ -50,6 +51,9 @@ int main() {
 	};
 
 	Player player(stateAnimationMap, 100.0f);	
+
+	Platform platform1(nullptr, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(500.0f, 200.0f));
+	Platform platform2(nullptr, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(500.0f, 0.0f));
 
 	float deltaTime = 0.0f;
 	sf::Clock clock;
@@ -87,11 +91,18 @@ int main() {
 		window.handleEvents(onClose, onKeyPressed, onWindowResized, onTextEntered);
 
 		player.Update(deltaTime);
+
+		auto playerCollider = player.GetCollider();
+ 		platform1.GetCollider().CheckCollision(playerCollider, 0.0f);
+		platform2.GetCollider().CheckCollision(playerCollider, 1.0f);
+
 		view.setCenter(player.GetPosition());
 
 		window.clear();
 		window.setView(view);
 		player.Draw(window);
+		platform1.Draw(window);
+		platform2.Draw(window);
 		window.display();
 	}
 	return 0;
