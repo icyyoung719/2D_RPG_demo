@@ -13,8 +13,16 @@
 using namespace std;
 
 
+const static float VIEW_HEIGHT = 512.0f;
+
+void ResizeView(const sf::RenderWindow &window, sf::View &view) {
+	float aspectRatio = float(window.getSize().x) / float(window.getSize().y);
+	view.setSize(sf::Vector2f{VIEW_HEIGHT * aspectRatio, VIEW_HEIGHT});
+}
+
 int main() {
 	sf::RenderWindow window(sf::VideoMode({512,512}), "SFML TEST");
+	sf::View view(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(VIEW_HEIGHT, VIEW_HEIGHT));
 
 	std::string assestsBasePath = "../../../../SFML_test/assests/";
 	sf::Texture idleTexture,walkTexture,jumpTexture,runTexture,flyingTexture;
@@ -59,9 +67,10 @@ int main() {
 			std::cout << "Ctrl+C pressed" << std::endl;
 		}
 	};
-	const auto onWindowResized = [&window](const sf::Event::Resized &resized)
+	const auto onWindowResized = [&window, &view](const sf::Event::Resized &resized)
 	{
 		std::cout << "New window size: " << resized.size.x << "x" << resized.size.y << std::endl;
+		ResizeView(window, view);
 	};
 	const auto onTextEntered = [](const sf::Event::TextEntered &textEntered)
 	{
@@ -77,28 +86,11 @@ int main() {
 
 		window.handleEvents(onClose, onKeyPressed, onWindowResized, onTextEntered);
 
-
-		// if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-		// 	player.move({ -0.1f, 0.0f });
-		// }
-		// if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-		// 	player.move({ 0.1f, 0.0f });
-		// }
-		// if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-		// 	player.move({ 0.0f, -0.1f });
-		// }
-		// if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-		// 	player.move({ 0.0f, 0.1f });
-		// }
-
-		// if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){
-		// 	sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-		// 	player.setPosition(window.mapPixelToCoords(mousePos));
-		// }
-
 		player.Update(deltaTime);
+		view.setCenter(player.GetPosition());
 
 		window.clear();
+		window.setView(view);
 		player.Draw(window);
 		window.display();
 	}

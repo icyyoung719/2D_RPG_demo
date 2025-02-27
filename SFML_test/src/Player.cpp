@@ -5,6 +5,7 @@ Player::Player(std::map<State, Animation> &animations, float speed):animations(a
     state = State::Idle;
     faceRight = true;
 
+    body.setOrigin(body.getSize() / 2.0f);
     body.setSize(sf::Vector2f(96.0f, 96.0f));
     body.setPosition({100.0f, 100.0f});
     body.setTexture(animations[state].getTexture());

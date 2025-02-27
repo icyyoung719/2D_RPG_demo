@@ -24,6 +24,7 @@ public:
 
     void Update(float deltaTime);
     void Draw(sf::RenderWindow& window);
+    sf::Vector2f GetPosition() { return body.getPosition(); }
 private:
     sf::RectangleShape body;
     // 每个State对应一个Animation
