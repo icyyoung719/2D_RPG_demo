@@ -10,6 +10,7 @@
 #include "Animation.h"
 #include "Player.h"
 #include "Platform.h"
+#include "TextureInfo.h"
 
 using namespace std;
 
@@ -36,13 +37,13 @@ int main() {
 		std::cerr << "Error loading texture" << std::endl;
 		return -1;
 	}
-	Animation idleAnimation(&idleTexture, sf::Vector2u(6, 1), 0.3f, sf::Vector2i(8, 8), sf::Vector2i(16, 24));
-	Animation walkAnimation(&walkTexture, sf::Vector2u(8, 1), 0.3f, sf::Vector2i(8, 8), sf::Vector2i(16, 24));
-	Animation jumpAnimation(&jumpTexture, sf::Vector2u(3, 1), 0.3f, sf::Vector2i(8, 8), sf::Vector2i(16, 24));
-	Animation runAnimation(&runTexture, sf::Vector2u(6, 1), 0.3f, sf::Vector2i(8, 8), sf::Vector2i(16, 24));
-	Animation flyingAnimation(&flyingTexture, sf::Vector2u(2, 1), 0.3f, sf::Vector2i(8, 8), sf::Vector2i(16, 24));
+	Animation idleAnimation(TextureInfo{ &idleTexture, sf::Vector2u(6, 1), 0.3f, sf::Vector2i(8, 8), sf::Vector2i(16, 24) });
+	Animation walkAnimation(TextureInfo{ &walkTexture, sf::Vector2u(8, 1), 0.3f, sf::Vector2i(8, 8), sf::Vector2i(16, 24) });
+	Animation jumpAnimation(TextureInfo{ &jumpTexture, sf::Vector2u(3, 1), 0.3f, sf::Vector2i(8, 8), sf::Vector2i(16, 24) });
+	Animation runAnimation(TextureInfo{ &runTexture, sf::Vector2u(6, 1), 0.3f, sf::Vector2i(8, 8), sf::Vector2i(16, 24) });
+	Animation flyingAnimation(TextureInfo{ &flyingTexture, sf::Vector2u(2, 1), 0.3f, sf::Vector2i(8, 8), sf::Vector2i(16, 24) });
 
-	std::map<Player::State, Animation> stateAnimationMap = {
+	std::unordered_map<Player::State, Animation> stateAnimationMap = {
 		{Player::State::Idle, idleAnimation},
 		{Player::State::Walk, walkAnimation},
 		{Player::State::Jump, jumpAnimation},

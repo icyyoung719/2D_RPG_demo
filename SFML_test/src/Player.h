@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <SFML/Graphics.hpp>
 #include "Animation.h"
 #include "Collider.h"
@@ -18,15 +18,15 @@ public:
         Flying
     };
     
-    Player(std::map<State, Animation> &animations, float speed);
+    Player(std::unordered_map<State, Animation> &animations, float speed);
     ~Player();
 
     void Update(float deltaTime) override;
     void Draw(sf::RenderWindow& window) override;
 
 private:
-    // 每个State对应一个Animation
-    std::map<State, Animation> animations;
+    // every state has its own animation
+    std::unordered_map<State, Animation> animations;
     float speed;
     bool faceRight;
     State state;

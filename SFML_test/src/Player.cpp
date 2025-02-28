@@ -1,6 +1,6 @@
 #include "Player.h"
 
-Player::Player(std::map<State, Animation> &animations, float speed):animations(animations), speed(speed)
+Player::Player(std::unordered_map<State, Animation> &animations, float speed):animations(animations), speed(speed)
 {
     state = State::Idle;
     faceRight = true;
@@ -10,6 +10,7 @@ Player::Player(std::map<State, Animation> &animations, float speed):animations(a
 
     body.setSize(actualSize);
     // body.setScale(sf::Vector2f{4.0f,4.0f});
+    //auto texture = animations[state].getTexture();
     body.setTexture(animations[state].getTexture());
     body.setOrigin(actualSize / 2.0f);
     body.setPosition({100.0f, 100.0f});

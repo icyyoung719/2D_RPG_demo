@@ -1,15 +1,16 @@
 #pragma once
 #include <SFML\Graphics.hpp>
+#include "TextureInfo.h"
 
 class Animation
 {
 public:
-    Animation(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, sf::Vector2i position, sf::Vector2i size);
+    Animation(const TextureInfo& textureInfo);
     Animation();
     ~Animation();
 
     void Update(int row, float deltaTime, bool faceRight);
-    sf::Texture* getTexture() { return texture; }
+    sf::Texture* getTexture() { return textureInfo.texture; }
 
 private:
     
@@ -21,10 +22,7 @@ public:
     sf::IntRect textureRealUvRect;
 
 private:
-    sf::Vector2u imageCount;
+    TextureInfo textureInfo;
     sf::Vector2u currentImage;
-    sf::Texture* texture;
-
     float totalTime;
-    float switchTime;
 };

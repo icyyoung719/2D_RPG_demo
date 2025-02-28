@@ -1,21 +1,22 @@
 #include "Animation.h"
 #include <iostream>
 
-Animation::Animation(sf::Texture* texture, sf::Vector2u imageCount, float switchTime, sf::Vector2i position, sf::Vector2i size) : 
-    imageCount(imageCount), switchTime(switchTime), texture(texture), totalTime(0.0f), currentImage(0, 0)
-
+Animation::Animation(const TextureInfo& textureInfo) : 
+    textureInfo(textureInfo), totalTime(0.0f), currentImage(0, 0)
 {
     standardUvRect.position = sf::Vector2i(0, 0);
-    standardUvRect.size.x = texture->getSize().x / float(imageCount.x);
-    standardUvRect.size.y = texture->getSize().y / float(imageCount.y);
+    standardUvRect.size.x = textureInfo.texture->getSize().x / float(textureInfo.imageCount.x);
+    standardUvRect.size.y = textureInfo.texture->getSize().y / float(textureInfo.imageCount.y);
 
-    textureRealUvRect.position = position;
-    textureRealUvRect.size = size;
+    textureRealUvRect.position = textureInfo.position;
+    textureRealUvRect.size = textureInfo.size;
 }
 
-Animation::Animation():imageCount(0,0), switchTime(0.0f), totalTime(0.0f), currentImage(0,0)
+
+Animation::Animation() : totalTime(0.0f), currentImage(0, 0)
 {
 }
+
 
 Animation::~Animation()
 {
@@ -26,11 +27,11 @@ void Animation::Update(int row, float deltaTime, bool faceRight)
     currentImage.y = row;
     totalTime += deltaTime;
 
-    if (totalTime >= switchTime)
+    if (totalTime >= textureInfo.switchTime)
     {
-        totalTime -= switchTime;
+        totalTime -= textureInfo.switchTime;
         currentImage.x++;
-        if (currentImage.x >= imageCount.x)
+        if (currentImage.x >= textureInfo.imageCount.x)
         {
             currentImage.x = 0;
         }
