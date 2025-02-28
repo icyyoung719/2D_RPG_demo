@@ -39,7 +39,7 @@ int main() {
 	}
 	Animation idleAnimation(TextureInfo{ &idleTexture, sf::Vector2u(6, 1), 0.3f, sf::Vector2i(8, 8), sf::Vector2i(16, 24) });
 	Animation walkAnimation(TextureInfo{ &walkTexture, sf::Vector2u(8, 1), 0.3f, sf::Vector2i(8, 8), sf::Vector2i(16, 24) });
-	Animation jumpAnimation(TextureInfo{ &jumpTexture, sf::Vector2u(3, 1), 0.3f, sf::Vector2i(8, 8), sf::Vector2i(16, 24) });
+	Animation jumpAnimation(TextureInfo{ &jumpTexture, sf::Vector2u(3, 1), 0.5f, sf::Vector2i(8, 8), sf::Vector2i(16, 24) });
 	Animation runAnimation(TextureInfo{ &runTexture, sf::Vector2u(6, 1), 0.3f, sf::Vector2i(8, 8), sf::Vector2i(16, 24) });
 	Animation flyingAnimation(TextureInfo{ &flyingTexture, sf::Vector2u(2, 1), 0.3f, sf::Vector2i(8, 8), sf::Vector2i(16, 24) });
 
@@ -51,10 +51,15 @@ int main() {
 		{Player::State::Flying, flyingAnimation}
 	};
 
-	Player player(stateAnimationMap, 100.0f);	
+	Player player(stateAnimationMap, 100.0f, 200);	
 
+	std::vector<Platform> platforms;
 	Platform platform1(nullptr, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(500.0f, 200.0f));
 	Platform platform2(nullptr, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(500.0f, 0.0f));
+	Platform platform3(nullptr, sf::Vector2f(1000.0f, 200.0f), sf::Vector2f(500.0f, 400.0f));
+	platforms.push_back(platform1);
+	platforms.push_back(platform2);
+	platforms.push_back(platform3);
 
 	float deltaTime = 0.0f;
 	sf::Clock clock;
@@ -87,23 +92,31 @@ int main() {
 	while (window.isOpen())
 	{
 		deltaTime = clock.restart().asSeconds();
+		if(deltaTime > 1.0f / 20.0f){
+			deltaTime = 1.0f / 20.0f;
+		}
 
 
 		window.handleEvents(onClose, onKeyPressed, onWindowResized, onTextEntered);
 
 		player.Update(deltaTime);
 
+		sf::Vector2f direction;
+
 		auto playerCollider = player.GetCollider();
- 		platform1.GetCollider().CheckCollision(playerCollider, 0.0f);
-		platform2.GetCollider().CheckCollision(playerCollider, 1.0f);
+		for (auto &platform : platforms) {
+			if(platform.GetCollider().CheckCollision(playerCollider, direction, 1.0f))
+				player.OnCollide(direction);
+		}
 
 		view.setCenter(player.GetPosition());
 
 		window.clear();
 		window.setView(view);
 		player.Draw(window);
-		platform1.Draw(window);
-		platform2.Draw(window);
+		for (auto &platform : platforms) {
+			platform.Draw(window);
+		}
 		window.display();
 	}
 	return 0;

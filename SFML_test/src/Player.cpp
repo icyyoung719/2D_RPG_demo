@@ -1,6 +1,8 @@
 #include "Player.h"
+#include <cmath>
 
-Player::Player(std::unordered_map<State, Animation> &animations, float speed):animations(animations), speed(speed)
+Player::Player(std::unordered_map<State, Animation> &animations, float speed, float jumpHeight):
+animations(animations), speed(speed), jumpHeight(jumpHeight)
 {
     state = State::Idle;
     faceRight = true;
@@ -22,24 +24,30 @@ Player::~Player()
 
 void Player::Update(float deltaTime)
 {
-    sf::Vector2f movement(0.0f, 0.0f);
+    velocity.x *= 0.0f;
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-        movement.x -= speed * deltaTime;
+        velocity.x -= speed;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-        movement.x += speed * deltaTime;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
-        movement.y -= speed * deltaTime;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-        movement.y += speed * deltaTime;
+        velocity.x += speed;
 
-    if(movement.x == 0.0f)
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && canJump)
+    {
+        canJump = false;
+        state = State::Jump;
+        velocity.y = -sqrtf(2.0f * 981.0f * jumpHeight);
+    }
+
+    velocity.y += 981.0f * deltaTime;
+
+    if((velocity.x == 0.0f) && (state != State::Jump)&& (state != State::Flying))
         state = State::Idle;
     else
     {
-        state = State::Walk;
+        if(state == State::Idle)
+            state = State::Walk;
 
-        if(movement.x > 0.0f)
+        if(velocity.x > 0.0f)
             faceRight = true;
         else
             faceRight = false;
@@ -47,10 +55,36 @@ void Player::Update(float deltaTime)
     animations[state].Update(0, deltaTime, faceRight);
     body.setTexture(animations[state].getTexture());
     body.setTextureRect(animations[state].textureRealUvRect);
-    body.move(movement);
+    body.move(velocity * deltaTime);
 }
 
 void Player::Draw(sf::RenderWindow &window)
 {
     window.draw(body);
+}
+
+void Player::OnCollide(sf::Vector2f direction)
+{
+    if(direction.x < 0.0f)
+    {
+        // Colliding on the right
+        velocity.x = 0.0f;
+    }
+    else if(direction.x > 0.0f)
+    {
+        // Colliding on the left
+        velocity.x = 0.0f;
+    }
+    if(direction.y < 0.0f)
+    {
+        // Colliding on the bottom
+        velocity.y = 0.0f;
+        canJump = true;
+        state = State::Idle;
+    }
+    else if(direction.y > 0.0f)
+    {
+        // Colliding on the top
+        velocity.y = 0.0f;
+    }
 }

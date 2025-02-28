@@ -18,11 +18,12 @@ public:
         Flying
     };
     
-    Player(std::unordered_map<State, Animation> &animations, float speed);
+    Player(std::unordered_map<State, Animation> &animations, float speed, float jumpHeight);
     ~Player();
 
     void Update(float deltaTime) override;
     void Draw(sf::RenderWindow& window) override;
+    void OnCollide(sf::Vector2f direction);
 
 private:
     // every state has its own animation
@@ -30,4 +31,8 @@ private:
     float speed;
     bool faceRight;
     State state;
+
+    sf::Vector2f velocity;
+    float jumpHeight;
+    bool canJump;
 };
