@@ -1,13 +1,12 @@
 #pragma once
 #include <vector>
 #include <map>
-
-#include <SFML\Graphics.hpp>
-
+#include <SFML/Graphics.hpp>
 #include "Animation.h"
 #include "Collider.h"
+#include "Entity.h"
 
-class Player
+class Player : public Entity
 {
 public:
     enum class State
@@ -22,13 +21,10 @@ public:
     Player(std::map<State, Animation> &animations, float speed);
     ~Player();
 
-    void Update(float deltaTime);
-    void Draw(sf::RenderWindow& window);
+    void Update(float deltaTime) override;
+    void Draw(sf::RenderWindow& window) override;
 
-    sf::Vector2f GetPosition() { return body.getPosition(); }
-    Collider GetCollider() { return Collider(body); }
 private:
-    sf::RectangleShape body;
     // 每个State对应一个Animation
     std::map<State, Animation> animations;
     float speed;

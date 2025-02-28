@@ -9,7 +9,6 @@ Collider::~Collider()
 {
 }
 
-
 bool Collider::CheckCollision(Collider &other, float push)
 {
     sf::Vector2f otherPosition = other.GetPosition();

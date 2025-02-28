@@ -48,10 +48,6 @@ void Animation::Update(int row, float deltaTime, bool faceRight)
         textureRealUvRect.size.x = abs(textureRealUvRect.size.x);
     }
     else {
-        if(currentImage.x == 7 ){
-            //
-            std::cout << "currentImage.x: " << currentImage.x << std::endl;
-        }
 
         standardUvRect.position.x = (currentImage.x + 1) * abs(standardUvRect.size.x);
         standardUvRect.size.x = -abs(standardUvRect.size.x);

@@ -1,5 +1,5 @@
 #pragma once
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 
 class Collider
 {
@@ -10,8 +10,8 @@ public:
     void Move(float dx, float dy) { body.move(sf::Vector2f{dx,dy}); }
 
     bool CheckCollision(Collider& other, float push);
-    sf::Vector2f GetPosition() { return body.getPosition(); }
-    sf::Vector2f GetHalfSize() { return body.getSize() / 2.0f; }
+    sf::Vector2f GetPosition() const { return body.getPosition(); }
+    sf::Vector2f GetHalfSize() const { return body.getSize() / 2.0f; }
 
 private:
     sf::RectangleShape& body;

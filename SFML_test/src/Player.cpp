@@ -31,10 +31,6 @@ void Player::Update(float deltaTime)
         movement.y -= speed * deltaTime;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
         movement.y += speed * deltaTime;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
-        movement.y -= speed * deltaTime;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-        movement.y += speed * deltaTime;
 
     if(movement.x == 0.0f)
         state = State::Idle;
