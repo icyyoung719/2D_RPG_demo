@@ -5,8 +5,8 @@ Animation::Animation(const TextureInfo& textureInfo) :
     textureInfo(textureInfo), totalTime(0.0f), currentImage(0, 0)
 {
     standardUvRect.position = sf::Vector2i(0, 0);
-    standardUvRect.size.x = textureInfo.texture->getSize().x / float(textureInfo.imageCount.x);
-    standardUvRect.size.y = textureInfo.texture->getSize().y / float(textureInfo.imageCount.y);
+    standardUvRect.size.x = static_cast<int>(textureInfo.texture->getSize().x / float(textureInfo.imageCount.x));
+    standardUvRect.size.y = static_cast<int>(textureInfo.texture->getSize().y / float(textureInfo.imageCount.y));
 
     textureRealUvRect.position = textureInfo.position;
     textureRealUvRect.size = textureInfo.size;
