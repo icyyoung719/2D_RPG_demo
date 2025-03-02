@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "Platform.h"
 #include "TextureInfo.h"
+#include "Map.h"
 
 using namespace std;
 
@@ -51,7 +52,10 @@ int main() {
 		{Player::State::Flying, flyingAnimation}
 	};
 
-	Player player(stateAnimationMap, 100.0f);	
+	Player player(stateAnimationMap, 32.0f);
+	Map map;
+	map.Initialize();
+	map.LoadMap();
 
 	Platform platform1(nullptr, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(500.0f, 200.0f));
 	Platform platform2(nullptr, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(500.0f, 0.0f));
@@ -59,6 +63,8 @@ int main() {
 	float deltaTime = 0.0f;
 	sf::Clock clock;
 
+	// float zoomFactor = 4.0f; // resize the view to 2 times bigger
+	// view.zoom(1.0f / zoomFactor);
 
 	const auto onClose = [&window](const sf::Event::Closed &)
 	{
@@ -92,6 +98,7 @@ int main() {
 		window.handleEvents(onClose, onKeyPressed, onWindowResized, onTextEntered);
 
 		player.Update(deltaTime);
+		map.Update(deltaTime);
 
 		auto playerCollider = player.GetCollider();
  		platform1.GetCollider().CheckCollision(playerCollider, 0.0f);
@@ -101,6 +108,7 @@ int main() {
 
 		window.clear();
 		window.setView(view);
+		map.Draw(window);
 		player.Draw(window);
 		platform1.Draw(window);
 		platform2.Draw(window);

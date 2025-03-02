@@ -7,6 +7,7 @@ Player::Player(std::unordered_map<State, Animation> &animations, float speed):an
     
     // resize to 4 times larger
     sf::Vector2f actualSize(16.0f*4, 24.0f*4);
+    this->speed = speed * 4.0f;
 
     body.setSize(actualSize);
     // body.setScale(sf::Vector2f{4.0f,4.0f});
