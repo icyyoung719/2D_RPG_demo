@@ -55,7 +55,6 @@ int main() {
 	Player player(stateAnimationMap, 32.0f);
 	Map map;
 	map.Initialize();
-	map.LoadMap();
 
 	Platform platform1(nullptr, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(500.0f, 200.0f));
 	Platform platform2(nullptr, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(500.0f, 0.0f));

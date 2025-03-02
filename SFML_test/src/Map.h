@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <unordered_map>
+#include "Tile.h"
 
 namespace std {
     template <>
@@ -36,16 +37,19 @@ private:
     sf::Sprite tileSheetSprite;
 
     // store the map as a 2D array of tile positions
-    std::unordered_map<sf::Vector2i, sf::Vector2i> tileMap;
+    std::unordered_map<sf::Vector2i, Tile> tileMap;
 
     // Helper function to add a tile to the map
-    void addTile(sf::Vector2i mapPosition, sf::Vector2i sheetPosition);
+    void addTile(sf::Vector2i mapPosition, Tile);
 };
 
 
 /*
-    对于类似于背景的静态团，我们只保留一个全局的Sprite，因为他们不会改变，全局的Sprite需要注意编写Update，将
-    会随着时间改变的动态效果，如树叶的飘动
+    对于类似于背景的静态团，我们只保留一个全局的Sprite，因为他们不会改变，
 
-    对于如箱子、矿石等，可能被单独改变状态的物体，我们需要对每个对象都创造一个Sprite
+    对于如箱子、矿石等，可能被单独改变状态的物体，我们需要对每个对象都创造一个Tile(包含Sprite),并注意编写Update函数
+
+    算了，暂时我们还是将所有的都创建一个Tile吧，这样可以方便的对每个Tile进行操作，而且地图中也不会有太多的Tile
+
+    后续可以优化
 */

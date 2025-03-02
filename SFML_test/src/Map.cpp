@@ -13,15 +13,28 @@ Map::~Map()
 
 void Map::Initialize()
 {
-    addTile({0, 0}, {0, 0});
-    addTile({1, 0}, {1, 0});
-    addTile({2, 0}, {2, 0});
-    addTile({0, 1}, {0, 1});
-    addTile({1, 1}, {1, 1});
-    addTile({2, 1}, {2, 1});
-    addTile({0, 2}, {0, 0});
-    addTile({1, 2}, {0, 0});
-    addTile({2, 2}, {0, 0});
+    LoadMap();
+    Tile test1{&tileSheetTexture, {0, 0}};
+    Tile test2{&tileSheetTexture, {1, 0}};
+    Tile test3{&tileSheetTexture, {2, 0}};
+    Tile test4{&tileSheetTexture, {0, 1}};
+
+    // addTile({0, 0}, {0, 0});
+    // addTile({1, 0}, {1, 0});
+    // addTile({2, 0}, {2, 0});
+    // addTile({0, 1}, {0, 1});
+    // addTile({1, 1}, {1, 1});
+    // addTile({2, 1}, {2, 1});
+    // addTile({0, 2}, {0, 0});
+    // addTile({1, 2}, {0, 0});
+    // addTile({2, 2}, {0, 0});
+
+    addTile({0, 0}, test1);
+    addTile({1, 0}, test2);
+    addTile({2, 0}, test3);
+    addTile({0, 1}, test4);
+    addTile({1, 1}, test1);
+    addTile({2, 1}, test2);
 }
 
 void Map::LoadMap()
@@ -48,28 +61,24 @@ void Map::LoadMap()
 
 void Map::Update(float deltaTime)
 {
+    for (auto& tile : tileMap)
+    {
+        tile.second.Update(deltaTime);
+    }
 }
 
 void Map::Draw(sf::RenderWindow &window)
 {
     for (const auto& tile : tileMap)
     {
-        sf::Vector2i mapPosition = tile.first;
-        sf::Vector2i sheetPosition = tile.second;
-        // make sure the tile is within the bounds of the tile sheet
-        if (sheetPosition.x >= totalTilesX || sheetPosition.y >= totalTilesY)
-        {
-            std::cerr << "Tile out of bounds" << std::endl;
-            continue;
+        if (tile.second.sprite) {
+            window.draw(*tile.second.sprite);
         }
-
-        tileSheetSprite.setPosition({mapPosition.x * tileWidth * 4.0f, mapPosition.y * tileHeight * 4.0f});
-        tileSheetSprite.setTextureRect(sf::IntRect({sheetPosition.x * tileWidth, sheetPosition.y * tileHeight}, {tileWidth, tileHeight}));
-        window.draw(tileSheetSprite);
     }
 }
 
-void Map::addTile(sf::Vector2i mapPosition, sf::Vector2i sheetPosition)
+void Map::addTile(sf::Vector2i mapPosition, Tile targetTile)
 {
-    tileMap[mapPosition] = sheetPosition;
+    targetTile.sprite->setPosition(sf::Vector2f{static_cast<float>(mapPosition.x * tileWidth * 4), static_cast<float>(mapPosition.y * tileHeight * 4)});
+    tileMap[mapPosition] = targetTile;
 }
