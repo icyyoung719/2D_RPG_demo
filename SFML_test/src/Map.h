@@ -22,8 +22,8 @@ public:
     Map();
     ~Map();
 
-    void Initialize();
-    void LoadMap();
+    void Initialize(const std::string& jsonPath);
+    void LoadMap(const std::string& jsonPath);
     void Update(float deltaTime);
     void Draw(sf::RenderWindow& window);
 

@@ -1,6 +1,7 @@
 #include "Map.h"
 #include <iostream>
 #include <string>
+#include "../dependency/JsonHandler.h"
 
 Map::Map() : 
     tileSheetSprite(tileSheetTexture), tileWidth(16), tileHeight(16), totalTilesX(0), totalTilesY(0), tileMap{}
@@ -11,54 +12,114 @@ Map::~Map()
 {
 }
 
-void Map::Initialize()
-{
-    LoadMap();
-    Tile test1{&tileSheetTexture, {0, 0}};
-    Tile test2{&tileSheetTexture, {1, 0}};
-    Tile test3{&tileSheetTexture, {2, 0}};
-    Tile test4{&tileSheetTexture, {0, 1}};
-
-    // addTile({0, 0}, {0, 0});
-    // addTile({1, 0}, {1, 0});
-    // addTile({2, 0}, {2, 0});
-    // addTile({0, 1}, {0, 1});
-    // addTile({1, 1}, {1, 1});
-    // addTile({2, 1}, {2, 1});
-    // addTile({0, 2}, {0, 0});
-    // addTile({1, 2}, {0, 0});
-    // addTile({2, 2}, {0, 0});
-
-    addTile({0, 0}, test1);
-    addTile({1, 0}, test2);
-    addTile({2, 0}, test3);
-    addTile({0, 1}, test4);
-    addTile({1, 1}, test1);
-    addTile({2, 1}, test2);
+void Map::Initialize(const std::string& jsonPath) {
+    // relative path
+    std::cout << "Loading Map with relative path: " << jsonPath << std::endl;
+    // absolute path
+    std::cout << "Loading Map with absolute path: " << std::filesystem::absolute(jsonPath) << std::endl; 
+    LoadMap(jsonPath);
 }
 
-void Map::LoadMap()
-{
-    std::string path = "../../../../SFML_test/assests/World/Overworld.png";
-    if(tileSheetTexture.loadFromFile(path))
-    {
-        totalTilesX = tileSheetTexture.getSize().x / tileWidth;
-        totalTilesY = tileSheetTexture.getSize().y / tileHeight;
-        tileSheetSprite.setTexture(tileSheetTexture);
-        tileSheetSprite.setTextureRect(sf::IntRect({0, 0}, {tileWidth, tileHeight}));
-        tileSheetSprite.setPosition({0, 0});
-        tileSheetSprite.setScale({4.0f, 4.0f}); 
+void Map::LoadMap(const std::string& jsonPath) {
+    json::JsonHandler jsonHandler(jsonPath);
 
-        std::cout << "World Map Texture Loaded" << std::endl;
-        std::cout << "Total Tiles X: " << totalTilesX << std::endl;
-        std::cout << "Total Tiles Y: " << totalTilesY << std::endl;
+    json::JsonElement* root = jsonHandler.getJsonElement("");
+    if (!root || root->getType() != json::JsonElement::Type::JSON_OBJECT) {
+        std::cerr << "Invalid JSON structure in " << jsonPath << std::endl;
+        return;
     }
-    else
-    {
-        std::cerr << "Error loading texture" << std::endl;
+
+    json::JsonObject* jsonObject = root->asObject();
+    if (!jsonObject) {
+        std::cerr << "Failed to get JSON object from root element." << std::endl;
+        return;
+    }
+
+    // Load basic map information
+    tileWidth = jsonObject->at("tileWidth")->asInt();
+    tileHeight = jsonObject->at("tileHeight")->asInt();
+    totalTilesX = jsonObject->at("totalTilesX")->asInt();
+    totalTilesY = jsonObject->at("totalTilesY")->asInt();
+
+    std::string tileSheetPath = jsonObject->at("tileSheetPath")->asString();
+    if (!tileSheetTexture.loadFromFile(tileSheetPath)) {
+        std::cerr << "Error loading texture: " << tileSheetPath << std::endl;
+        return;
+    }
+
+    tileSheetSprite.setTexture(tileSheetTexture);
+    tileSheetSprite.setTextureRect(sf::IntRect({0, 0}, {tileWidth, tileHeight}));
+    tileSheetSprite.setPosition({0, 0});
+    tileSheetSprite.setScale({4.0f, 4.0f});
+
+    std::cout << "World Map Texture Loaded" << std::endl;
+    std::cout << "Total Tiles X: " << totalTilesX << std::endl;
+    std::cout << "Total Tiles Y: " << totalTilesY << std::endl;
+
+    // Load tiles
+    json::JsonElement* tilesElement = jsonObject->at("tiles").get();
+    if (!tilesElement || tilesElement->getType() != json::JsonElement::Type::JSON_ARRAY) {
+        std::cerr << "Invalid 'tiles' array in JSON." << std::endl;
+        return;
+    }
+
+    json::JsonArray* tilesArray = tilesElement->asArray();
+    if (!tilesArray) {
+        std::cerr << "Failed to get JSON array from 'tiles' element." << std::endl;
+        return;
+    }
+
+    for (const auto& tileElement : *tilesArray) {
+        if (!tileElement || tileElement->getType() != json::JsonElement::Type::JSON_OBJECT) {
+            std::cerr << "Invalid tile element in JSON." << std::endl;
+            continue;
+        }
+
+        json::JsonObject* tileObject = tileElement->asObject();
+        if (!tileObject) {
+            std::cerr << "Failed to get JSON object from tile element." << std::endl;
+            continue;
+        }
+
+        sf::Vector2i mapPosition = {
+            tileObject->at("mapPosition")->asArray()->at(0)->asInt(),
+            tileObject->at("mapPosition")->asArray()->at(1)->asInt()
+        };
+
+        sf::Vector2i sheetPosition = {
+            tileObject->at("sheetPosition")->asArray()->at(0)->asInt(),
+            tileObject->at("sheetPosition")->asArray()->at(1)->asInt()
+        };
+
+        bool isDynamic = tileObject->at("isDynamic")->asBool();
+        float switchTime = isDynamic ? static_cast<float>(tileObject->at("switchTime")->asDouble()) : 0.0f;
+
+
+        Tile tile(&tileSheetTexture, sheetPosition, isDynamic, switchTime);
+
+        if (isDynamic && tileObject->contains("updateLoop")) {
+            json::JsonArray* updateLoopArray = tileObject->at("updateLoop")->asArray();
+            if (updateLoopArray) {
+                std::vector<sf::Vector2i> updateLoop;
+                for (const auto& posElement : *updateLoopArray) {
+                    if (posElement->getType() == json::JsonElement::Type::JSON_ARRAY) {
+                        json::JsonArray* posArray = posElement->asArray();
+                        if (posArray && posArray->size() == 2) {
+                            sf::Vector2i pos = {
+                                posArray->at(0)->asInt(),
+                                posArray->at(1)->asInt()
+                            };
+                            updateLoop.push_back(pos);
+                        }
+                    }
+                }
+                tile.setUpdateLoop(updateLoop);
+            }
+        }
+
+        addTile(mapPosition, tile);
     }
 }
-
 void Map::Update(float deltaTime)
 {
     for (auto& tile : tileMap)

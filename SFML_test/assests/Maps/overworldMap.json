@@ -1,0 +1,60 @@
+{
+    "name": "Overworld for testing",
+    "tileWidth": 16,
+    "tileHeight": 16,
+    "totalTilesX": 10,
+    "totalTilesY": 10,
+    "tileSheetPath": "../../../../SFML_test/assests/World/Overworld.png",
+    "tiles": [
+        {
+            "mapPosition": [0, 0],
+            "sheetPosition": [0, 0],
+            "isDynamic": false,
+            "updateLoop": []
+        },
+        {
+            "mapPosition": [1, 0],
+            "sheetPosition": [1, 0],
+            "isDynamic": false,
+            "updateLoop": []
+        },
+        {
+            "mapPosition": [2, 0],
+            "sheetPosition": [2, 0],
+            "isDynamic": false,
+            "updateLoop": []
+        },
+        {
+            "mapPosition": [0, 1],
+            "sheetPosition": [0, 1],
+            "isDynamic": false,
+            "updateLoop": []
+        },
+        {
+            "mapPosition": [1, 1],
+            "sheetPosition": [0, 0],
+            "isDynamic": false,
+            "updateLoop": []
+        },
+        {
+            "mapPosition": [2, 1],
+            "sheetPosition": [1, 0],
+            "isDynamic": false,
+            "updateLoop": []
+        },
+        {
+            "mapPosition": [3, 3],
+            "sheetPosition": [3, 3],
+            "isDynamic": true,
+            "switchTime": 0.4,
+            "updateLoop": [
+                [3, 3],
+                [4, 3],
+                [5, 3],
+                [3, 4],
+                [4, 4],
+                [5, 4]
+            ]
+        }
+    ]
+}
