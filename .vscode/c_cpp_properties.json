@@ -4,7 +4,8 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "D:\\WPS_course\\thirdparty_install\\SFML-3.0.0\\include"
+                "D:\\WPS_course\\thirdparty_install\\SFML-3.0.0\\include",
+                "D:\\WPS_course\\thirdparty_install\\SFML-3.0.0\\src\\SFML-3.0.0\\src"
             ],
             "defines": [
                 "_DEBUG",

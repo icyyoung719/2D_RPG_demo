@@ -13,11 +13,17 @@ find_package(SFML 3.0 REQUIRED COMPONENTS Window Graphics System)
 # 添加库文件路径
 link_directories(D:/WPS_course/thirdparty_install/SFML-3.0.0/lib)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/dependency
+)
 
 file(GLOB SOURCES "src/*.cpp")
+file(GLOB DEPENDENCY_SOURCES "dependency/*.cpp")
 
-add_executable(${PROJECT_NAME} ${SOURCES})
+set(ALL_SOURCES ${SOURCES} ${DEPENDENCY_SOURCES})
+
+add_executable(${PROJECT_NAME} ${ALL_SOURCES})
 
 # 链接 SFML 库
 target_link_libraries(${PROJECT_NAME}
