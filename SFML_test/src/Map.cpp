@@ -4,7 +4,7 @@
 #include "../dependency/JsonHandler.h"
 
 Map::Map() : 
-    tileSheetSprite(tileSheetTexture), tileWidth(16), tileHeight(16), totalTilesX(0), totalTilesY(0), tileMap{}
+    tileWidth(16), tileHeight(16), totalTilesX(0), totalTilesY(0), tileMap{}
 {
 }
 
@@ -46,11 +46,6 @@ void Map::LoadMap(const std::string& jsonPath) {
         std::cerr << "Error loading texture: " << tileSheetPath << std::endl;
         return;
     }
-
-    tileSheetSprite.setTexture(tileSheetTexture);
-    tileSheetSprite.setTextureRect(sf::IntRect({0, 0}, {tileWidth, tileHeight}));
-    tileSheetSprite.setPosition({0, 0});
-    tileSheetSprite.setScale({4.0f, 4.0f});
 
     std::cout << "World Map Texture Loaded" << std::endl;
     std::cout << "Total Tiles X: " << totalTilesX << std::endl;

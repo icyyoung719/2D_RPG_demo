@@ -34,7 +34,6 @@ private:
     int totalTilesY;
 
     sf::Texture tileSheetTexture;
-    sf::Sprite tileSheetSprite;
 
     // store the map as a 2D array of tile positions
     std::unordered_map<sf::Vector2i, Tile> tileMap;
