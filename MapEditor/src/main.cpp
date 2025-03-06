@@ -7,14 +7,19 @@
 #include <SFML\Window.hpp>
 #include <SFML\System.hpp>
 
+#include "Grid.h"
+#include "MouseTile.h"
+
 using namespace std;
 
 
 const static float VIEW_HEIGHT = 512.0f;
 
 int main() {
-	sf::RenderWindow window(sf::VideoMode({512,512}), "Map Edited");
-	sf::View view(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(VIEW_HEIGHT, VIEW_HEIGHT));
+	sf::RenderWindow window(sf::VideoMode({512*2,512}), "Map Editor");
+	sf::View view(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(VIEW_HEIGHT*2, VIEW_HEIGHT));
+	view.setCenter({static_cast<float>(window.getSize().x) / 2, static_cast<float>(window.getSize().y) / 2});
+
 
 	std::string assestsBasePath = "../../../../SFML_test/assests/";
 	sf::Texture idleTexture,walkTexture,jumpTexture,runTexture,flyingTexture;
@@ -28,6 +33,12 @@ int main() {
 		return -1;
 	}
 
+	Grid grid({100.0, 100.0}, {16, 16}, {10, 5}, {4, 4}, 2, sf::Color{255, 0, 0, 255});
+	grid.Initialize();
+	grid.Load();
+	MouseTile mouse_tile{{4.0f,4.0f}, {16,16}, {100.0f, 100.0f}};
+	mouse_tile.Initialize();
+	mouse_tile.Load();
 
 	float deltaTime = 0.0f;
 	sf::Clock clock;
@@ -55,11 +66,16 @@ int main() {
 	while (window.isOpen())
 	{
 		deltaTime = clock.restart().asSeconds();
+		sf::Vector2f mousePosition = sf::Vector2f{sf::Mouse::getPosition(window)};
 
 		window.handleEvents(onClose, onKeyPressed, onTextEntered);
+		grid.Update(deltaTime);
+		mouse_tile.Update(deltaTime, mousePosition);
 
 		window.clear();
 		window.setView(view);
+		grid.Draw(window);
+		mouse_tile.Draw(window);
 		window.display();
 	}
 	return 0;
