@@ -19,6 +19,8 @@ public:
     void setFile(const std::string& file_path);
     void parseJson();
     JsonElement* getJsonElement(const std::string& path);
+    //void insertJsonElement(const std::string& path, JsonElement& element);
+    void insertJsonElement(const std::string& path, JsonElement&& insertedElement);
     ~JsonHandler() = default;
 
 private:

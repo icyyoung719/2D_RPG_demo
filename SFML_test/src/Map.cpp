@@ -23,6 +23,11 @@ void Map::Initialize(const std::string& jsonPath) {
 void Map::LoadMap(const std::string& jsonPath) {
     json::JsonHandler jsonHandler(jsonPath);
 
+    // test!!
+    // json::JsonElement myObject = json::JsonElement("myObject");
+    // std::string path = R"(["doadjiwa"])";
+    // jsonHandler.insertJsonElement(path, std::move(myObject));
+
     json::JsonElement* root = jsonHandler.getJsonElement("");
     if (!root || root->getType() != json::JsonElement::Type::JSON_OBJECT) {
         std::cerr << "Invalid JSON structure in " << jsonPath << std::endl;
