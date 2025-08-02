@@ -4,6 +4,7 @@
 /obj/
 /out/
 /.vs/
+/.vscode/
 
 # Ignore Visual Studio files
 *.suo
