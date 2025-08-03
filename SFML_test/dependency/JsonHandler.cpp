@@ -34,7 +34,7 @@ void JsonHandler::parseJson() {
     }
 }
 
-JsonElement* JsonHandler::getJsonElement(const std::string& path) {
+JsonElement* JsonHandler::getJsonElement(const std::string& path) const {
     std::sregex_iterator it(path.begin(), path.end(), re);
     std::sregex_iterator end;
 

@@ -20,7 +20,7 @@ public:
     JsonHandler(const std::string& file_path);
     void setFile(const std::string& file_path);
     void parseJson();
-    JsonElement* getJsonElement(const std::string& path);
+    JsonElement* getJsonElement(const std::string& path) const;
     void insertJsonElement(const std::string& path, JsonElement&& insertedElement);
     void outputToFile(const std::string& file_path);
     ~JsonHandler() = default;
