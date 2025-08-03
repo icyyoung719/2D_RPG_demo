@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <optional>
 #include <string>
 #include <vector>
@@ -56,7 +56,7 @@ int main() {
 	Map map;
 	std::string mapLocation{assestsBasePath + "/Maps/overworldMap.json"};
 	map.Initialize(mapLocation);
-
+	
 	Platform platform1(nullptr, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(500.0f, 200.0f));
 	Platform platform2(nullptr, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(500.0f, 0.0f));
 

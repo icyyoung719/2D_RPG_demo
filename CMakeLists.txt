@@ -14,5 +14,4 @@ endif()
 project("CMakeProject1")
 
 # 包含子项目。
-add_subdirectory("MapEditor")
 add_subdirectory("SFML_test")
