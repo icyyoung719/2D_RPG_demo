@@ -4,7 +4,7 @@
     "tileHeight": 16,
     "totalTilesX": 10,
     "totalTilesY": 10,
-    "tileSheetPath": "../../../../SFML_test/assests/World/Overworld.png",
+    "tileSheetPath": "../../../SFML_test/assests/World/Overworld.png",
     "tiles": [
         {
             "mapPosition": [0, 0],

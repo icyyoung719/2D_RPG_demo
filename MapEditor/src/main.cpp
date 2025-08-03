@@ -21,7 +21,7 @@ int main() {
 	view.setCenter({static_cast<float>(window.getSize().x) / 2, static_cast<float>(window.getSize().y) / 2});
 
 
-	std::string assestsBasePath = "../../../../SFML_test/assests/";
+	std::string assestsBasePath = "../../../SFML_test/assests/";
 	sf::Texture idleTexture,walkTexture,jumpTexture,runTexture,flyingTexture;
 	bool ideLoaded = idleTexture.loadFromFile(assestsBasePath + "Hiker/Separated Animation PNGs/Idle.png");
 	bool walkLoaded = walkTexture.loadFromFile(assestsBasePath + "Hiker/Separated Animation PNGs/Walk.png");

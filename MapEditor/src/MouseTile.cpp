@@ -16,7 +16,7 @@ void MouseTile::Initialize()
 
 void MouseTile::Load()
 {
-    std::string tilePath = "../../../../MapEditor/assests/World/Overworld.png";
+    std::string tilePath = "../../../MapEditor/assests/World/Overworld.png";
     bool loadResult = tileSheet.loadFromFile(tilePath);
     if( !loadResult){
         std::cout << "Failed to load tile sheet!" << std::endl;
@@ -41,9 +41,21 @@ void MouseTile::Update(float deltaTime, sf::Vector2f mousePos)
     
     // multiply by 16(tile size) and 4(scale)
     tileSprite->setPosition(sf::Vector2f{blockPos.x * tileSize.x * tileScale.x, blockPos.y * tileSize.y * tileScale.y} + offset);
+    
 }
 
 void MouseTile::Draw(sf::RenderWindow& window)
 {
     window.draw(tileSprite.value());
+}
+
+bool MouseTile::IsMouseClickedOnTile(sf::Vector2f& tilePos) const
+{
+    bool itsOnGrid = true;
+    if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && itsOnGrid)
+    {
+        tilePos = tileSprite->getPosition();
+        return true;
+    }
+    return false;
 }
