@@ -27,7 +27,7 @@ int main() {
 	sf::RenderWindow window(sf::VideoMode({512,512}), "SFML TEST");
 	sf::View view(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(VIEW_HEIGHT, VIEW_HEIGHT));
 
-	std::string assestsBasePath = "../../../../SFML_test/assests/";
+	std::string assestsBasePath = "../../../SFML_test/assests/";
 	sf::Texture idleTexture,walkTexture,jumpTexture,runTexture,flyingTexture;
 	bool ideLoaded = idleTexture.loadFromFile(assestsBasePath + "Hiker/Separated Animation PNGs/Idle.png");
 	bool walkLoaded = walkTexture.loadFromFile(assestsBasePath + "Hiker/Separated Animation PNGs/Walk.png");

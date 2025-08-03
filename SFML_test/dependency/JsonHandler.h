@@ -6,6 +6,8 @@
 #include <memory>
 #include <regex>
 #include <string>
+#include <coroutine>
+
 #include "Scanner.h"
 #include "Parser.h"
 #include "JsonElement.h"
@@ -19,8 +21,8 @@ public:
     void setFile(const std::string& file_path);
     void parseJson();
     JsonElement* getJsonElement(const std::string& path);
-    //void insertJsonElement(const std::string& path, JsonElement& element);
     void insertJsonElement(const std::string& path, JsonElement&& insertedElement);
+    void outputToFile(const std::string& file_path);
     ~JsonHandler() = default;
 
 private:

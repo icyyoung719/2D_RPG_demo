@@ -1,4 +1,7 @@
-#include "JsonHandler.h"
+﻿#include "JsonHandler.h"
+#include <iostream>
+#include <filesystem>
+#include <string>
 
 namespace json {
 
@@ -160,5 +163,16 @@ void JsonHandler::insertJsonElement(const std::string& path, JsonElement&& inser
         arr[index] = std::make_unique<JsonElement>(std::move(insertedElement)); // 插入任意类型
         std::cout << "Inserted at index: " << index << std::endl;
     }
+}
+void JsonHandler::outputToFile(const std::string &file_path)
+{
+    std::ofstream outputFile(file_path);
+    if (!outputFile.is_open()) {
+        std::cerr << "Failed to open file for writing.\n";
+        return;
+    }
+    outputFile << this->element->toString() << std::endl;
+    std::cout << "Output JSON to file: " << file_path << std::endl;
+    std::cout << "Absolute output path: " << std::filesystem::absolute(file_path) << std::endl;
 }
 } // namespace json
