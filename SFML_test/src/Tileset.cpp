@@ -1,4 +1,4 @@
-﻿#include "TilesetLoader.h"
+﻿#include "Tileset.h"
 #include <iostream>
 #include <filesystem>
 
@@ -56,7 +56,7 @@ TilesetData::TilesetData(const json::JsonObject* jsonObject) :
 }
 
 
-bool TilesetLoader::loadFromFile(const std::string& jsonPath) {
+bool Tileset::loadFromFile(const std::string& jsonPath) {
 	// 加载JSON文件
 	json::JsonHandler jsonHandler(jsonPath);
 
@@ -86,7 +86,7 @@ bool TilesetLoader::loadFromFile(const std::string& jsonPath) {
 	return true;
 }
 
-bool TilesetLoader::parseData(const json::JsonObject* jsonObject) {
+bool Tileset::parseData(const json::JsonObject* jsonObject) {
 
 	data = std::move(TilesetData(jsonObject));
 
@@ -97,4 +97,9 @@ bool TilesetLoader::parseData(const json::JsonObject* jsonObject) {
 	}
 
 	return true;
+}
+
+bool Tileset::contains(int pos) const
+{
+	return pos >= 0 && pos < data.tileCount;
 }

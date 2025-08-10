@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <optional>
 #include "../dependency/JsonHandler.h"
 
 struct TilesetAnimationFrame {
@@ -12,7 +13,7 @@ struct TilesetAnimationFrame {
 
 struct TilesetTile {
 	int id;                                 // tile ID
-	std::vector<TilesetAnimationFrame> animation; // 动画帧
+	std::optional<std::vector<TilesetAnimationFrame>> animation; // 动画帧
 };
 
 struct TilesetData {
@@ -37,20 +38,24 @@ struct TilesetData {
 	std::vector<TilesetTile> tiles; // tile数组
 };
 
-class TilesetLoader {
+class Tileset {
 public:
-	TilesetLoader() {};
-	~TilesetLoader() = default;
+	Tileset() {};
+	~Tileset() = default;
 
 	bool loadFromFile(const std::string& jsonPath);
+	bool contains(int pos) const;
 
 	// 获取纹理
-	const sf::Texture& getTexture() const { return texture; }
+	// const sf::Texture& getTexture() const { return texture; }
+
+	// 获取指定id的tile，id合法性由外部保证
+	const TilesetTile& getTile(int id) const { return data.tiles[id]; }
 
 public:
-	TilesetData data;  // 数据实例
+	TilesetData data;  // 数据实例，后续需要考虑访问权限问题，暂时用public
 private:
-	sf::Texture texture;                // 纹理
+	sf::Texture texture;
 
 	bool parseData(const json::JsonObject* jsonObject);
 };
