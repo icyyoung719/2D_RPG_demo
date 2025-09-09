@@ -5,7 +5,6 @@
 
 #include "../dependency/JsonHandler.h"
 
-
 Map::Map(const std::string& filename)
 {
 	Load(filename);
@@ -21,7 +20,8 @@ void Map::Load(const std::string& filename)
 	json::JsonHandler jsonHandler(filename);
 
 	json::JsonElement* root = jsonHandler.getJsonElement("");
-	if (!root || root->getType() != json::JsonElement::Type::JSON_OBJECT) {
+	if (!root || root->getType() != json::JsonElement::Type::JSON_OBJECT)
+	{
 		assert(false);
 	}
 
@@ -41,20 +41,23 @@ void Map::Load(const std::string& filename)
 	MapLayer layer;
 	if (!layerArray)
 		assert(false);
-	for (int i = 0; i < layerArray->size(); i++) {
+	for (int i = 0; i < layerArray->size(); i++)
+	{
 		json::JsonObject* layerObject = layerArray->at(i)->asObject();
 		layer.id = layerObject->at("id")->asInt();
 		layer.name = layerObject->at("name")->asString();
 		layer.width = layerObject->at("width")->asInt();
 		layer.height = layerObject->at("height")->asInt();
-		layer.opacity = static_cast<float>(layerObject->at("opacity")->asInt());
+		// layer.opacity = static_cast<float>(layerObject->at("opacity")->asInt());
+		layer.opacity = layerObject->at("opacity")->asInt();
 		layer.visible = layerObject->at("visible")->asBool();
 		layer.x = layerObject->at("x")->asInt();
 		layer.y = layerObject->at("y")->asInt();
 
 		std::vector<int> data;
 		json::JsonArray* dataArray = layerObject->at("data")->asArray();
-		for (int j = 0; j < dataArray->size(); j++) {
+		for (int j = 0; j < dataArray->size(); j++)
+		{
 			data.push_back(dataArray->at(j)->asInt());
 		}
 		layer.data = std::move(data);
@@ -65,10 +68,10 @@ void Map::Load(const std::string& filename)
 
 void Map::Draw(sf::RenderWindow& window)
 {
-    // TODO
+	// TODO
 }
 
 void Map::Update(double deltaTime)
 {
-    // TODO
+	// TODO
 }

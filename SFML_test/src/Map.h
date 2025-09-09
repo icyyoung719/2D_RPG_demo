@@ -6,7 +6,7 @@
 #include <optional>
 #include <SFML/Graphics.hpp>
 #include "Tile.h"
-#include "TilesetLoader.h"
+#include "Tileset.h"
 
 struct MapLayer {
     inline int getTileId(int x, int y) const {
@@ -57,5 +57,5 @@ private:
     bool infinite = false;
 
 	std::vector<MapLayer> layers;
-    std::vector<TilesetLoader> tilesets;
+    std::vector<Tileset> tilesets;
 };

@@ -1,0 +1,14 @@
+{ "columns":4,
+ "image":"C:\/Users\/icyyoung\/Downloads\/basictiles.png",
+ "imageheight":240,
+ "imagewidth":128,
+ "margin":0,
+ "name":"basictiles",
+ "spacing":0,
+ "tilecount":28,
+ "tiledversion":"1.11.2",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":"1.10"
+}
