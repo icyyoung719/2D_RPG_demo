@@ -1,5 +1,5 @@
 { "columns":40,
- "image":"../world/overworld.png",
+ "image":"overworld.png",
  "imageheight":576,
  "imagewidth":640,
  "margin":0,

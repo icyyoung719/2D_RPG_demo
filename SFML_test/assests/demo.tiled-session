@@ -5,9 +5,9 @@
     },
     "activeFile": "maps/test_map.json",
     "expandedProjectPaths": [
-        "maps",
+        "world",
         ".",
-        "world"
+        "maps"
     ],
     "fileStates": {
         "maps/testMap.json": {
@@ -38,6 +38,10 @@
                 "y": 114.66666666666664
             }
         },
+        "world/basictiles_tileset.json": {
+            "scaleInDock": 3,
+            "scaleInEditor": 1
+        },
         "world/overworld_tileset.json": {
             "scaleInDock": 1,
             "scaleInEditor": 1
@@ -52,10 +56,12 @@
     "map.width": 64,
     "openFiles": [
         "maps/test_map.json",
-        "world/overworld_tileset.json"
+        "world/overworld_tileset.json",
+        "world/basictiles_tileset.json"
     ],
     "project": "demo.tiled-project",
     "recentFiles": [
+        "world/basictiles_tileset.json",
         "world/overworld_tileset.json",
         "maps/test_map.json",
         "overworld_tileset.json",
