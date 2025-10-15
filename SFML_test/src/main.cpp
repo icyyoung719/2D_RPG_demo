@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "Platform.h"
 #include "TextureInfo.h"
+#include "Tileset.h"
 #include "Map.h"
 
 using namespace std;
@@ -53,6 +54,8 @@ int main() {
 	};
 
 	Player player(stateAnimationMap, 32.0f);
+	Tileset tileset;
+	tileset.loadFromFile(assestsBasePath + "/world/overworld_tileset.json");
 	Map map;
 	std::string mapLocation{assestsBasePath + "/Maps/tiledMap.json"};
 	map.Initialize(mapLocation);

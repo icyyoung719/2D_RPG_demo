@@ -11,11 +11,12 @@ struct TilesetAnimationFrame {
 	int duration;   // 帧持续时间(毫秒)
 };
 
-struct TilesetTile {
+struct TilesetTile {	// 动态tile的信息
 	int id;                                 // tile ID
-	std::optional<std::vector<TilesetAnimationFrame>> animation; // 动画帧
+	std::vector<TilesetAnimationFrame> animation; // 动画帧
 };
 
+// 直接在tileset的json中存储的数据信息
 struct TilesetData {
 	TilesetData() = default;
 	TilesetData(const json::JsonObject* jsonObject);
@@ -35,6 +36,7 @@ struct TilesetData {
 	int tileCount;            // tile总数
 	int tileHeight;           // 单个tile高度
 	int tileWidth;            // 单个tile宽度
+	// 静态tile不存储，直接使用id或位置获取
 	std::vector<TilesetTile> tiles; // tile数组
 };
 

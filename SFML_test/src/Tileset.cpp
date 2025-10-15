@@ -14,59 +14,46 @@ TilesetData::TilesetData(const json::JsonObject* jsonObject) : columns(jsonObjec
                                                                tileHeight(jsonObject->at("tileheight")->asInt()),
                                                                tileWidth(jsonObject->at("tilewidth")->asInt())
 {
-	// 解析tiles数组
-	json::JsonElement* tilesElement = jsonObject->at("tiles").get();
-	if (tilesElement && tilesElement->getType() == json::JsonElement::Type::JSON_ARRAY)
-	{
-		json::JsonArray* tilesArray = tilesElement->asArray();
-		if (tilesArray)
-		{
-			std::vector<TilesetTile> tempTiles;
-			for (const auto& tileElement : *tilesArray)
-			{
-				if (tileElement && tileElement->getType() == json::JsonElement::Type::JSON_OBJECT)
-				{
-					json::JsonObject* tileObject = tileElement->asObject();
-					if (tileObject)
-					{
-						TilesetTile tile;
-						tile.id = tileObject->at("id")->asInt();
+    // 辅助处理动画帧
+    auto parseAnimation = [](json::JsonObject* tileObject, TilesetTile& tile) {
+        auto* animationElement = tileObject->at("animation").get();
+        if (!animationElement || animationElement->getType() != json::JsonElement::Type::JSON_ARRAY)
+            return;
+        auto* animationArray = animationElement->asArray();
+		tile.animation.reserve(animationArray->size());
 
-						// 解析animation数组
-						json::JsonElement* animationElement = tileObject->at("animation").get();
-						if (animationElement && animationElement->getType() == json::JsonElement::Type::JSON_ARRAY)
-						{
-							json::JsonArray* animationArray = animationElement->asArray();
-							if (animationArray)
-							{
-								for (const auto& frameElement : *animationArray)
-								{
-									if (frameElement && frameElement->getType() == json::JsonElement::Type::JSON_OBJECT)
-									{
-										json::JsonObject* frameObject = frameElement->asObject();
-										if (frameObject)
-										{
-											TilesetAnimationFrame frame;
-											frame.tileid = frameObject->at("tileid")->asInt();
-											frame.duration = frameObject->at("duration")->asInt();
-											if (!tile.animation.has_value())
-											{
-												tile.animation.emplace();
-											}
-											tile.animation->push_back(frame);
-										}
-									}
-								}
-							}
-						}
+        for (const auto& frameElement : *animationArray) {
+            if (!frameElement || frameElement->getType() != json::JsonElement::Type::JSON_OBJECT)
+                continue;
+            auto* frameObject = frameElement->asObject();
+            TilesetAnimationFrame frame;
+            frame.tileid = frameObject->at("tileid")->asInt();
+            frame.duration = frameObject->at("duration")->asInt();
+            // if (!tile.animation.has_value())
+            //     tile.animation.emplace();
+            tile.animation.push_back(frame);
+        }
+    };
 
-						tempTiles.push_back(tile);
-					}
-				}
-			}
-			const_cast<std::vector<TilesetTile>&>(tiles) = tempTiles;
-		}
-	}
+    // tiles数组解析
+    auto* tilesElement = jsonObject->at("tiles").get();
+    if (!tilesElement || tilesElement->getType() != json::JsonElement::Type::JSON_ARRAY)
+        return;
+    auto* tilesArray = tilesElement->asArray();
+
+    std::vector<TilesetTile> tempTiles;
+    for (const auto& tileElement : *tilesArray) {
+        if (!tileElement || tileElement->getType() != json::JsonElement::Type::JSON_OBJECT)
+            continue;
+        auto* tileObject = tileElement->asObject();
+
+        TilesetTile tile;
+        tile.id = tileObject->at("id")->asInt();
+        parseAnimation(tileObject, tile);	// 解析动画
+
+        tempTiles.push_back(std::move(tile));
+    }
+    const_cast<std::vector<TilesetTile>&>(tiles) = std::move(tempTiles);
 }
 
 bool Tileset::loadFromFile(const std::string& jsonPath)
@@ -95,6 +82,7 @@ bool Tileset::loadFromFile(const std::string& jsonPath)
 
 	std::filesystem::path jsonDir = std::filesystem::absolute(jsonPath).parent_path();
 	std::filesystem::path imageFullPath = jsonDir / data.imagePath;
+	data.imagePath = imageFullPath.string(); // 更新为绝对路径而不是相对于json文件的路径
 	if (!texture.loadFromFile(imageFullPath.string()))
 	{
 		std::cerr << "Failed to load texture: " << imageFullPath << std::endl;
