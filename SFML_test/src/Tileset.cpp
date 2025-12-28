@@ -36,6 +36,9 @@ TilesetData::TilesetData(const json::JsonObject* jsonObject) : columns(jsonObjec
     };
 
     // tiles数组解析
+    if (jsonObject->find("tiles") == jsonObject->end())
+        return;  // tiles数组不存在，直接返回
+    
     auto* tilesElement = jsonObject->at("tiles").get();
     if (!tilesElement || tilesElement->getType() != json::JsonElement::Type::JSON_ARRAY)
         return;

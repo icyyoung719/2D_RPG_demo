@@ -7,6 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include "Tile.h"
 #include "Tileset.h"
+#include "Constants.h"
 
 struct MapLayer {
     inline int getTileId(int x, int y) const {
@@ -23,6 +24,11 @@ struct MapLayer {
     bool visible = true;
 	int x = 0;
 	int y = 0;
+};
+
+struct TilesetReference {
+    int firstgid;           // First global tile ID in this tileset
+    std::string source;     // Path to the tileset JSON file
 };
 
 class Map {
@@ -48,6 +54,10 @@ public:
     /// 判断某 tile 是否在地图边界内
     // bool isInBounds(int x, int y) const;
 private:
+    // Helper functions
+    Tileset* getTilesetByGid(int gid);
+    sf::Vector2i getTilePositionInTileset(int gid, const Tileset* tileset, int firstgid);
+    
     int mapWidth = 0;     // in tiles
     int mapHeight = 0;
     int tileWidth = 0;    // in pixels
@@ -57,5 +67,7 @@ private:
     bool infinite = false;
 
 	std::vector<MapLayer> layers;
+    std::vector<TilesetReference> tilesetRefs;
     std::vector<Tileset> tilesets;
+    std::vector<std::vector<Tile>> tiles;  // 2D array of tiles for rendering
 };

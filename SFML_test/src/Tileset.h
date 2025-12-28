@@ -49,7 +49,7 @@ public:
 	bool contains(int pos) const;
 
 	// 获取纹理
-	// const sf::Texture& getTexture() const { return texture; }
+	const sf::Texture& getTexture() const { return texture; }
 
 	// 获取指定id的tile，id合法性由外部保证
 	const TilesetTile& getTile(int id) const { return data.tiles[id]; }
