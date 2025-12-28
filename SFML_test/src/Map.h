@@ -57,6 +57,9 @@ private:
     Tileset* getTilesetByGid(int gid);
     sf::Vector2i getTilePositionInTileset(int gid, const Tileset* tileset, int firstgid);
     
+    // Constants
+    static constexpr float TILE_SCALE = 4.0f;  // Scale factor for tile rendering
+    
     int mapWidth = 0;     // in tiles
     int mapHeight = 0;
     int tileWidth = 0;    // in pixels
