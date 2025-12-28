@@ -6,7 +6,7 @@
 #include <filesystem>
 #include <cassert>
 
-#include "../dependency/JsonHandler.h"
+#include "dependency/JsonHandler.h"
 
 Map::Map(const std::string& filename)
 {
