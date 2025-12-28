@@ -7,6 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include "Tile.h"
 #include "Tileset.h"
+#include "Constants.h"
 
 struct MapLayer {
     inline int getTileId(int x, int y) const {
@@ -56,9 +57,6 @@ private:
     // Helper functions
     Tileset* getTilesetByGid(int gid);
     sf::Vector2i getTilePositionInTileset(int gid, const Tileset* tileset, int firstgid);
-    
-    // Constants
-    static constexpr float TILE_SCALE = 4.0f;  // Scale factor for tile rendering
     
     int mapWidth = 0;     // in tiles
     int mapHeight = 0;

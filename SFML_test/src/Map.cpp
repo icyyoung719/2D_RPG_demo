@@ -172,7 +172,7 @@ void Map::Draw(sf::RenderWindow& window)
 		{
 			if (tiles[y][x].sprite)
 			{
-				sf::Vector2f position(x * tileWidth * TILE_SCALE, y * tileHeight * TILE_SCALE);
+				sf::Vector2f position(x * tileWidth * GameConstants::TILE_SCALE, y * tileHeight * GameConstants::TILE_SCALE);
 				tiles[y][x].sprite->setPosition(position);
 				window.draw(*tiles[y][x].sprite);
 			}
