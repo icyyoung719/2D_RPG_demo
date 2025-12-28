@@ -10,10 +10,24 @@ set(SFML_STATIC_LIBRARIES TRUE)
 
 find_package(SFML 3.0 REQUIRED COMPONENTS Window Graphics System)
 
-# 收集所有src和deps下的.cpp源文件
+# 收集所有src和deps下的.cpp源文件和.h头文件
 file(GLOB_RECURSE SRC_FILES src/*.cpp)
-file(GLOB_RECURSE DEPS_FILES deps/*/*.cpp)
-set(ALL_SOURCES ${SRC_FILES} ${DEPS_FILES})
+file(GLOB_RECURSE HEADER_FILES src/*.h)
+file(GLOB_RECURSE DEPS_SRC_FILES deps/*/*.cpp)
+file(GLOB_RECURSE DEPS_HEADER_FILES deps/*/*.h)
+
+set(ALL_SOURCES
+    ${SRC_FILES}
+    ${HEADER_FILES}
+    ${DEPS_SRC_FILES}
+    ${DEPS_HEADER_FILES}
+)
+
+# 让头文件在IDE里分组显示
+source_group(
+    TREE ${CMAKE_CURRENT_SOURCE_DIR}
+    FILES ${ALL_SOURCES}
+)
 
 add_executable(${PROJECT_NAME} ${ALL_SOURCES})
 
