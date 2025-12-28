@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 #include <optional>
-#include "dependency/JsonHandler.h"
+#include "json/JsonHandler.h"
 
 struct TilesetAnimationFrame {
 	int tileid;     // 帧对应的tile ID
