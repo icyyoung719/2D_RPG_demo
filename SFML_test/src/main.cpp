@@ -3,9 +3,9 @@
 #include <string>
 #include <vector>
 
-#include <SFML\Graphics.hpp>
-#include <SFML\Window.hpp>
-#include <SFML\System.hpp>
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+#include <SFML/System.hpp>
 
 #include "Animation.h"
 #include "Player.h"
@@ -55,9 +55,9 @@ int main() {
 
 	Player player(stateAnimationMap, 32.0f);
 	Tileset tileset;
-	tileset.loadFromFile(assestsBasePath + "/world/overworld_tileset.json");
+	tileset.loadFromFile(assestsBasePath + "World/overworld_tileset.json");
 	Map map;
-	std::string mapLocation{assestsBasePath + "/Maps/tiledMap.json"};
+	std::string mapLocation{assestsBasePath + "Maps/test_map.json"};
 	map.Initialize(mapLocation);
 	
 	Platform platform1(nullptr, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(500.0f, 200.0f));
