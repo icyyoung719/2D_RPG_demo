@@ -2,8 +2,8 @@
 #include <vector>
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
-#include "Animation.h"
-#include "Collider.h"
+#include "../graphics/Animation.h"
+#include "../physics/Collider.h"
 #include "Entity.h"
 
 class Player : public Entity

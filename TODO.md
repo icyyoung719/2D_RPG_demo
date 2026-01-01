@@ -14,8 +14,12 @@
 1. 添加日志模块，使用传统的单例+宏定义
 	- 分级，LOG_ERROR, LOG_WARNING, LOG_INFO, LOG_TRACE
 	- 日志输出到控制台或文件
-2. 调整代码组织，不要都放在src下
-3. 调整main函数，不能放这么多东西，要有个清晰的逻辑去统一管理，如：
+2. ~~调整代码组织，不要都放在src下~~ ✅ **完成** (2026-01-01)
+	- 已创建模块化目录结构：core/, entities/, graphics/, world/, physics/, utils/
+3. ~~调整main函数，不能放这么多东西，要有个清晰的逻辑去统一管理~~ ✅ **完成** (2026-01-01)
+	- 已创建 Game 类管理游戏循环
+	- 已创建 ResourceManager 单例管理资源加载
+	- main.cpp 现在只负责初始化和启动游戏
 ```cpp
 int main() {
 	// 初始化日志

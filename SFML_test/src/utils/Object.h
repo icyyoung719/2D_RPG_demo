@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <SFML/Graphics.hpp>
 
-#include "Collider.h"
+#include "../physics/Collider.h"
 
 // Base class for all objects in the game
 class Object

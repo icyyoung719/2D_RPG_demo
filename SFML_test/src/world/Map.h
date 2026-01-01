@@ -7,7 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include "Tile.h"
 #include "Tileset.h"
-#include "Constants.h"
+#include "../utils/Constants.h"
 
 struct MapLayer {
     inline int getTileId(int x, int y) const {
