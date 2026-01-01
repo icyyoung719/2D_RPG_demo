@@ -1,6 +1,7 @@
 ﻿#pragma once 
 #include <SFML/Graphics.hpp>
 #include <optional>
+#include <algorithm>
 #include "../utils/Constants.h"
 
 struct Tile

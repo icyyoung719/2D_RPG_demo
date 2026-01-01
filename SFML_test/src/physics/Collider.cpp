@@ -1,4 +1,6 @@
 ﻿#include "Collider.h"
+#include <cmath>
+#include <algorithm>
 
 Collider::Collider(sf::RectangleShape &body) : 
 	body(body)
