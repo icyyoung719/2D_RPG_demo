@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <memory>
+#include <string>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
@@ -28,6 +29,7 @@ private:
     void handleEvents();
     void update(float deltaTime);
     void render();
+    void updateFpsDisplay();
     void resizeView(const sf::RenderWindow& window, sf::View& view);
 
     // Window and view
@@ -44,4 +46,8 @@ private:
     // Timing
     sf::Clock clock;
     float deltaTime;
+    sf::Clock fpsClock;
+    unsigned int frameCounter;
+    float currentFps;
+    std::string windowTitle;
 };

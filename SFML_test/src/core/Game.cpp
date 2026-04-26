@@ -6,11 +6,16 @@
 #include "../graphics/Animation.h"
 #include "../graphics/TextureInfo.h"
 #include <iostream>
+#include <sstream>
+#include <iomanip>
 
 Game::Game() 
     : window(sf::VideoMode({512, 512}), "SFML TEST"),
       view(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(VIEW_HEIGHT, VIEW_HEIGHT)),
-      deltaTime(0.0f) {
+    deltaTime(0.0f),
+    frameCounter(0),
+    currentFps(0.0f),
+    windowTitle("SFML TEST") {
 }
 
 Game::~Game() {
@@ -21,6 +26,8 @@ void Game::run() {
     
     while (window.isOpen()) {
         deltaTime = clock.restart().asSeconds();
+        ++frameCounter;
+        updateFpsDisplay();
         
         handleEvents();
         update(deltaTime);
@@ -29,6 +36,8 @@ void Game::run() {
 }
 
 void Game::initialize() {
+    window.setFramerateLimit(GameConstants::TARGET_FPS);
+
     auto& resourceManager = ResourceManager::getInstance();
     
     // Load player textures
@@ -76,7 +85,7 @@ void Game::initialize() {
     
     // Load map
     map = std::make_unique<Map>();
-    std::string mapLocation = resourceManager.getBasePath() + "Maps/test_map.json";
+    std::string mapLocation = resourceManager.getBasePath() + "maps/rich_map.json";
     map->Initialize(mapLocation);
     
     // Create platforms
@@ -130,6 +139,23 @@ void Game::render() {
     platform1->Draw(window);
     platform2->Draw(window);
     window.display();
+}
+
+void Game::updateFpsDisplay() {
+    const float elapsed = fpsClock.getElapsedTime().asSeconds();
+    if (elapsed < 0.5f) {
+        return;
+    }
+
+    currentFps = static_cast<float>(frameCounter) / elapsed;
+    frameCounter = 0;
+    fpsClock.restart();
+
+    std::ostringstream titleBuilder;
+    titleBuilder << windowTitle << " | FPS: "
+                 << std::fixed << std::setprecision(1) << currentFps
+                 << " / " << GameConstants::TARGET_FPS;
+    window.setTitle(titleBuilder.str());
 }
 
 void Game::resizeView(const sf::RenderWindow& window, sf::View& view) {
