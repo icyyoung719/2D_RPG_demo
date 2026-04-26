@@ -1,0 +1,58 @@
+﻿name: CI - Cross-platform
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-linux:
+    name: Build (Ubuntu)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config: [Debug, Release]
+        compiler: [gcc, clang]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build libsfml-dev
+
+      - name: Configure
+        run: |
+          mkdir -p build
+          cd build
+          if [ "${{ matrix.compiler }}" = "clang" ]; then export CC=clang; export CXX=clang++; fi
+          cmake -S .. -B . -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.config }}
+
+      - name: Build
+        run: cmake --build build --config ${{ matrix.config }} -- -j$(nproc)
+
+
+  build-windows:
+    name: Build (Windows)
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        config: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tools
+        run: |
+          choco install -y cmake --installargs 'ADD_CMAKE_TO_PATH=System'
+          choco install -y ninja
+
+      - name: Configure (MSVC/Ninja)
+        shell: bash
+        run: |
+          mkdir -p build
+          cd build
+          cmake -S .. -B . -G "Ninja" -A x64 -DCMAKE_BUILD_TYPE=${{ matrix.config }}
+
+      - name: Build
+        run: cmake --build build --config ${{ matrix.config }} -- -j
