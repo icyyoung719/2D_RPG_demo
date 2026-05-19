@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include <filesystem>
 #include <string>
 #include <unordered_map>
 #include <memory>
@@ -15,11 +16,11 @@ public:
     ResourceManager(ResourceManager&&) = delete;
     ResourceManager& operator=(ResourceManager&&) = delete;
 
-    void setBasePath(const std::string& path);
-    const std::string& getBasePath() const;
+    void setBasePath(const std::filesystem::path& path);
+    const std::filesystem::path& getBasePath() const;
 
     // Load a texture and store it
-    bool loadTexture(const std::string& name, const std::string& filename);
+    bool loadTexture(const std::string& name, const std::filesystem::path& filename);
     
     // Get a texture by name
     sf::Texture* getTexture(const std::string& name);
@@ -28,6 +29,6 @@ private:
     ResourceManager() = default;
     ~ResourceManager() = default;
 
-    std::string basePath;
+    std::filesystem::path basePath;
     std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures;
 };

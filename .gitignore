@@ -5,6 +5,7 @@
 /out/
 /.vs/
 /.vscode/
+.claude/
 
 # Ignore Visual Studio files
 *.suo

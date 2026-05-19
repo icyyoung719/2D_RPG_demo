@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include <filesystem>
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -28,13 +29,13 @@ struct MapLayer {
 
 struct TilesetReference {
     int firstgid;           // First global tile ID in this tileset
-    std::string source;     // Path to the tileset JSON file
+    std::filesystem::path source;     // Path to the tileset JSON file
 };
 
 class Map {
 public:
     Map() = default;
-    Map(const std::string& filename);
+    Map(const std::filesystem::path& filename);
 	~Map() = default;
     Map(const Map&) = delete;
 	Map& operator=(Map&& other) = delete;
@@ -42,8 +43,8 @@ public:
 
 	void Draw(sf::RenderWindow& window);
 	void Update(double deltaTime);
-	void Initialize(const std::string& filename);
-    void Load(const std::string& filename);
+	void Initialize(const std::filesystem::path& filename);
+    void Load(const std::filesystem::path& filename);
 
     /// 获取图层（可选）
     // std::optional<const MapLayer*> getLayer(const std::string& name) const;

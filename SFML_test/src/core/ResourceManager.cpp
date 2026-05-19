@@ -6,20 +6,21 @@ ResourceManager& ResourceManager::getInstance() {
     return instance;
 }
 
-void ResourceManager::setBasePath(const std::string& path) {
+void ResourceManager::setBasePath(const std::filesystem::path& path) {
     basePath = path;
 }
 
-const std::string& ResourceManager::getBasePath() const {
+const std::filesystem::path& ResourceManager::getBasePath() const {
     return basePath;
 }
 
-bool ResourceManager::loadTexture(const std::string& name, const std::string& filename) {
+bool ResourceManager::loadTexture(const std::string& name, const std::filesystem::path& filename) {
     auto texture = std::make_unique<sf::Texture>();
-    std::string fullPath = basePath + filename;
+    std::filesystem::path fullPath = basePath / filename;
     
-    if (!texture->loadFromFile(fullPath)) {
+    if (!texture->loadFromFile(fullPath.string())) {
         std::cerr << "Error loading texture: " << fullPath << std::endl;
+        std::cerr << "File absolute path: " << std::filesystem::absolute(fullPath) << std::endl;
         return false;
     }
     

@@ -50,3 +50,12 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 if (MSVC)
     set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:CONSOLE")
 endif()
+
+# 拷贝 assests 文件夹到生成的 exe 目录
+add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_CURRENT_SOURCE_DIR}/assests"
+    "$<TARGET_FILE_DIR:${PROJECT_NAME}>/assests"
+    COMMENT "Copying assets to target directory"
+)

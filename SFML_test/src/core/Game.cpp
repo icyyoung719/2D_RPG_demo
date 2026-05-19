@@ -41,11 +41,11 @@ void Game::initialize() {
     auto& resourceManager = ResourceManager::getInstance();
     
     // Load player textures
-    if (!resourceManager.loadTexture("player_idle", "Hiker/Separated Animation PNGs/Idle.png") ||
-        !resourceManager.loadTexture("player_walk", "Hiker/Separated Animation PNGs/Walk.png") ||
-        !resourceManager.loadTexture("player_jump", "Hiker/Separated Animation PNGs/Jump.png") ||
-        !resourceManager.loadTexture("player_run", "Hiker/Separated Animation PNGs/Run.png") ||
-        !resourceManager.loadTexture("player_flying", "Hiker/Separated Animation PNGs/Flying.png")) {
+    if (!resourceManager.loadTexture("player_idle", std::filesystem::path("Hiker") / "Separated Animation PNGs" / "Idle.png") ||
+        !resourceManager.loadTexture("player_walk", std::filesystem::path("Hiker") / "Separated Animation PNGs" / "Walk.png") ||
+        !resourceManager.loadTexture("player_jump", std::filesystem::path("Hiker") / "Separated Animation PNGs" / "Jump.png") ||
+        !resourceManager.loadTexture("player_run", std::filesystem::path("Hiker") / "Separated Animation PNGs" / "Run.png") ||
+        !resourceManager.loadTexture("player_flying", std::filesystem::path("Hiker") / "Separated Animation PNGs" / "Flying.png")) {
         std::cerr << "Error loading player textures" << std::endl;
         return;
     }
@@ -85,8 +85,8 @@ void Game::initialize() {
     
     // Load map
     map = std::make_unique<Map>();
-    std::string mapLocation = resourceManager.getBasePath() + "maps/rich_map.json";
-    map->Initialize(mapLocation);
+    std::filesystem::path mapLocation = resourceManager.getBasePath() / "maps" / "rich_map.json";
+    map->Initialize(mapLocation.string());
     
     // Create platforms
     platform1 = std::make_unique<Platform>(nullptr, sf::Vector2f(400.0f, 200.0f), sf::Vector2f(500.0f, 200.0f));

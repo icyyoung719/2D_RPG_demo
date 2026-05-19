@@ -1,6 +1,5 @@
 ﻿#include "Map.h"
 
-#include <string>
 #include <vector>
 #include <iostream>
 #include <filesystem>
@@ -8,19 +7,19 @@
 
 #include "json/JsonHandler.h"
 
-Map::Map(const std::string& filename)
+Map::Map(const std::filesystem::path& filename)
 {
 	Load(filename);
 }
 
-void Map::Initialize(const std::string& filename)
+void Map::Initialize(const std::filesystem::path& filename)
 {
 	Load(filename);
 }
 
-void Map::Load(const std::string& filename)
+void Map::Load(const std::filesystem::path& filename)
 {
-	json::JsonHandler jsonHandler(filename);
+	json::JsonHandler jsonHandler(filename.string());
 
 	json::JsonElement* root = jsonHandler.getJsonElement("");
 	if (!root || root->getType() != json::JsonElement::Type::JSON_OBJECT)
@@ -43,7 +42,7 @@ void Map::Load(const std::string& filename)
 	json::JsonArray* tilesetArray = map->at("tilesets")->asArray();
 	if (tilesetArray)
 	{
-		std::filesystem::path mapDir = std::filesystem::absolute(filename).parent_path();
+		std::filesystem::path mapDir = filename.parent_path();
 		for (size_t i = 0; i < tilesetArray->size(); i++)
 		{
 			json::JsonObject* tilesetObj = tilesetArray->at(i)->asObject();
