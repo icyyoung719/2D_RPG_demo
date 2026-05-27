@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ main, master ]
 
+env:
+  SFML_VERSION: "3.0.0"
+  SFML_DIR: ${{ github.workspace }}/sfml/install/lib/cmake/SFML
+
 jobs:
   build-linux:
     name: Build (Ubuntu)
@@ -20,14 +24,35 @@ jobs:
       - name: Install system packages
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential cmake ninja-build libsfml-dev
+          sudo apt-get install -y build-essential cmake ninja-build \
+            libx11-dev libxrandr-dev libxcursor-dev libudev-dev \
+            libfreetype-dev libopenal-dev libflac-dev libvorbis-dev \
+            libgl1-mesa-dev libegl1-mesa-dev
+
+      - name: Cache SFML
+        id: cache-sfml
+        uses: actions/cache@v4
+        with:
+          path: sfml/install
+          key: sfml-${{ env.SFML_VERSION }}-${{ matrix.compiler }}-${{ matrix.config }}
+
+      - name: Build SFML
+        if: steps.cache-sfml.outputs.cache-hit != 'true'
+        run: |
+          git clone --depth 1 --branch ${{ env.SFML_VERSION }} https://github.com/SFML/SFML.git sfml/src
+          cmake -S sfml/src -B sfml/build -G Ninja \
+            -DCMAKE_BUILD_TYPE=${{ matrix.config }} \
+            -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/sfml/install \
+            -DSFML_BUILD_AUDIO=OFF \
+            -DSFML_BUILD_NETWORK=OFF
+          cmake --build sfml/build --target install -- -j$(nproc)
 
       - name: Configure
         run: |
-          mkdir -p build
-          cd build
           if [ "${{ matrix.compiler }}" = "clang" ]; then export CC=clang; export CXX=clang++; fi
-          cmake -S .. -B . -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.config }}
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=${{ matrix.config }} \
+            -DSFML_DIR=${{ env.SFML_DIR }}
 
       - name: Build
         run: cmake --build build --config ${{ matrix.config }} -- -j$(nproc)
@@ -47,12 +72,31 @@ jobs:
           choco install -y cmake --installargs 'ADD_CMAKE_TO_PATH=System'
           choco install -y ninja
 
+      - name: Cache SFML
+        id: cache-sfml
+        uses: actions/cache@v4
+        with:
+          path: sfml/install
+          key: sfml-${{ env.SFML_VERSION }}-msvc-${{ matrix.config }}
+
+      - name: Build SFML
+        if: steps.cache-sfml.outputs.cache-hit != 'true'
+        shell: bash
+        run: |
+          git clone --depth 1 --branch ${{ env.SFML_VERSION }} https://github.com/SFML/SFML.git sfml/src
+          cmake -S sfml/src -B sfml/build -G Ninja \
+            -DCMAKE_BUILD_TYPE=${{ matrix.config }} \
+            -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/sfml/install \
+            -DSFML_BUILD_AUDIO=OFF \
+            -DSFML_BUILD_NETWORK=OFF
+          cmake --build sfml/build --target install -- -j$(nproc)
+
       - name: Configure (MSVC/Ninja)
         shell: bash
         run: |
-          mkdir -p build
-          cd build
-          cmake -S .. -B . -G "Ninja" -A x64 -DCMAKE_BUILD_TYPE=${{ matrix.config }}
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=${{ matrix.config }} \
+            -DSFML_DIR=${{ env.SFML_DIR }}
 
       - name: Build
         run: cmake --build build --config ${{ matrix.config }} -- -j
