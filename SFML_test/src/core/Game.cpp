@@ -1,10 +1,10 @@
 ﻿#include "Game.h"
 #include "ResourceManager.h"
-#include "../entities/Player.h"
-#include "../entities/Platform.h"
-#include "../world/Map.h"
-#include "../graphics/Animation.h"
-#include "../graphics/TextureInfo.h"
+#include "entities/Player.h"
+#include "entities/Platform.h"
+#include "world/Map.h"
+#include "graphics/Animation.h"
+#include "graphics/TextureInfo.h"
 #include <iostream>
 #include <sstream>
 #include <iomanip>

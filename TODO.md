@@ -1,58 +1,38 @@
-- 将Animation继承于sf::Sprite，方便setTextureRect，并且update也会更加方便
-- 参考其他库，添加地图编辑器Map类，从json中读取地图信息，产生实际的地图对象
-- 添加基础元素block，作为地图的元素，block产生enactableBlock，用于与地图交互
-- 添加基础元素item，用于处理金币等掉落物、projectile等
-- 添加基础元素enemy，用于处理敌人，完毕后添加aibrain，用于处理敌人的行为
-- 将纹理的加载设置一个register，避免手动编写大量的载入代码
+# 2D RPG Demo TODO List
 
+## 🎯 核心框架 (Core Framework)
+- [ ] **日志模块**：使用传统的单例+宏定义
+  - 分级：`LOG_ERROR`, `LOG_WARNING`, `LOG_INFO`, `LOG_TRACE`
+  - 需求：日志输出到控制台或文件。默认 Debug 输出到控制台，Release 默认输出到文件。配置语句添加注释，以便需要时快速临时切换。
+- [ ] **代码格式化**：统一使用 `clang-format`。
+- [ ] **资源注册**：将纹理的加载设置一个 register 机制，避免手动编写大量的载入代码。
+- [ ] **动画系统优化**：将 `Animation` 继承于 `sf::Sprite`，方便调用 `setTextureRect`，同时让 `update` 更加清晰。
 
----------------------
-将最关键的class设计放入kernel中，产生一个比较完备的框架，以此为基础设计demo
+## 👾 游戏实体与交互 (Entities & Gameplay)
+- [ ] **基础元素 Block**：作为地图的元素，将 block 派生出 `EnactableBlock` 等专门用于与地图互动的类。
+- [ ] **基础元素 Item**：用于处理金币等掉落物、飞行投射物（projectile）等。
+- [ ] **基础元素 Enemy 与 AI**：添加 `Enemy` 基础元素处理敌人；后续增加 `AIBrain` 来处理敌人的行为树或 AI 逻辑。
 
+## 🗺️ 体验与内容扩展 (Long-term / Backlog)
+- [ ] **资源管理优化**：注意防止资源重复加载，进一步实现资源延迟加载（Lazy Loading）。
+- [ ] **地图切换**：实现不同场景和关卡之间的过渡加载。
+- [ ] **实体与交互丰富化**：更多的机关与环境交互方式。
+- [ ] **更多的游戏内容**：敌人、不同形态的 NPC 角色与多功能 AI。
+- [ ] **UI 与对话框**：对话系统、主菜单、UI面板。**重点**：一定要确保 UI 的流畅性，做到极其丝滑。
+- [ ] **文本系统**：剧情、交流、提示等文本功能（注意本地化 Localization，代码初期先统一使用英语基础）。
+- [ ] **音频系统**：BGM 音乐与环境、动作音效加载。
+- [ ] **系统功能**：存档、读档功能。
+- [ ] **图形效果**：添加粒子系统提升游戏表现力。
 
-## 12.28
-1. 添加日志模块，使用传统的单例+宏定义
-	- 分级，LOG_ERROR, LOG_WARNING, LOG_INFO, LOG_TRACE
-	- 日志输出到控制台或文件
-2. ~~调整代码组织，不要都放在src下~~ ✅ **完成** (2026-01-01)
-	- 已创建模块化目录结构：core/, entities/, graphics/, world/, physics/, utils/
-3. ~~调整main函数，不能放这么多东西，要有个清晰的逻辑去统一管理~~ ✅ **完成** (2026-01-01)
-	- 已创建 Game 类管理游戏循环
-	- 已创建 ResourceManager 单例管理资源加载
-	- main.cpp 现在只负责初始化和启动游戏
-```cpp
-int main() {
-	// 初始化日志
-	Logger::getInstance().init("log.txt");
+---
 
-	// 加载资源
-	ResourceManager::getInstance().loadResources("resources/");
+## ✅ 已完成 (Done)
 
-	// 或者更详细，也可以分模块加载
-	// 加载图片资源、音频资源、地图资源
-
-	// 创建游戏对象
-	// 创建人物、地图等
-	Game game;
-	game.run();
-
-	return 0;
-}
-```
-4. 帧率控制，不能无限制的跑，太吃CPU了
-5. 文件路径参数使用`std::filesystem::path`，不要一个string拼接一大堆，也方便跨平台
-6. format代码，统一使用clang-format
-7. 
-8. 文件组织，不要写`#include "../deps/JsonHandler.h"`，我记得cmake可以设置include路径，直接include`deps/JsonHandler.h`，或者之后调整了代码组织，写成`#include "json/JsonHandler.h"`和`include "log/Logger.h"`之类的
-9. 暂时没想好其他特别需要的
-
-不那么迫切的：
-1. 地图切换
-2. 敌人、人物、AI
-3. 实体、交互
-4. 对话框、UI、菜单（一定要确保UI的流畅性，要做到极其丝滑）
-5. 音乐、音效
-6. 文本、剧情、交流（注意localization，先全用英语）
-7. 存档、读档
-8. 粒子系统
-9. 注意防止资源重复加载、实现资源延迟加载
+### 架构与基础设施
+- [x] **框架重构**：将最关键的类设计抽象放入核心，建立较完备的框架基础，支持后续 demo 设计。
+- [x] **模块化重构** *(2026-01-01)*：调整代码组织，摒弃大杂烩于 `src`，划分为 `core/`, `entities/`, `graphics/`, `world/`, `physics/`, `utils/` 等模块。
+- [x] **游戏入口与生命周期** *(2026-01-01)*：调整 `main` 逻辑，创建 `Game` 类统一进行游戏循环管理，使用 `ResourceManager` 单例维护资源加载。
+- [x] **帧率控制**：限制游戏循环的刷新率，避免占用过多 CPU。
+- [x] **跨平台文件路径**：所有文件路径参数采用 C++17 `std::filesystem::path`，取代冗长的字符串操作，兼顾多平台兼容。
+- [x] **地图解析**：添加地图管理 (`Map` / `Tileset` 类)，支持直接从 JSON 中读取关卡配置，并生成实际可渲染的地图对象。
+- [x] **包含路径标准化** *(2026-05-27)*：统一所有跨模块 include 为基于 `src/` 根路径的形式（如 `"graphics/Animation.h"`），消除 `../` 相对路径。

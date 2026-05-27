@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include <SFML/Graphics.hpp>
-#include "../physics/Collider.h"
+#include "physics/Collider.h"
 #include "Entity.h"
 
 class Platform : public Entity
