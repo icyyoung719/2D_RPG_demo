@@ -7,6 +7,10 @@
 /.vscode/
 .claude/
 
+# Ignore Python caches (tools/)
+__pycache__/
+*.pyc
+
 # Ignore Visual Studio files
 *.suo
 *.user

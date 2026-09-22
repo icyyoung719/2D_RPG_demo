@@ -82,5 +82,15 @@ map JSON（常见结构及要点）
 - Tileset 示例：assests/world/basictiles_tileset.json, assests/world/overworld_tileset.json
 - 精灵/动画：assests/Hiker/, assests/Jumping_boy_sprites/
 
+**瓦片属性（碰撞 / 地形）的生成流程**
+
+碰撞与地形信息不在 Tiled 里手工点选，而是由规则文件生成，避免上千次点击并保证可复查：
+
+- 单一真源：`tools/tile_semantics.txt`，按 tileset 分组，支持 `wang`（王块颜色）、`anim`（动画基块及其所有帧）、`range`（网格矩形）、`tile`（单块或列表）四类规则；类别为 `solid` / `water` / `walkable` / `empty` / `?`（未定）。
+- 生成：`python3 tools/gen_tile_props.py` — 默认只为地图实际使用到的 tile 写入属性，结果合并进 tileset json 的 `tiles[].properties`（`{"solid": true}`、`{"terrain": "water"}`、`{"walkable": true}`、`{"empty": true}`）。`animation`、`wangsets` 及手写的其他属性不会被改动。
+- 校验：`python3 tools/gen_tile_props.py --check` 比较语义而非字节（Tiled 重新保存导致的排版变化不算差异）；若地图用到了尚未分类的 tile，或 json 里的属性与规则不一致，则失败。CI 的 `tile-properties` 任务运行该检查，因此新增地图不会悄悄引入未分类的瓦片。
+- 目视复查：`python3 tools/proof_sheet.py [--only-used] [--zoom N]`，输出到 `build/tile-proof/`，边框颜色即类别（红=solid、青=water、绿=walkable、蓝=empty、灰=未分类），左上角白点表示该 tile 被地图使用；用于替代在 Tiled 里逐个点选。
+- 规则中的 ID 是 tileset 局部索引（即地图 gid 减去该 tileset 的 `firstgid`，Tiled 状态栏显示的值）；行列号为从 0 开始的网格坐标。
+
 ---
 如需我把 `MapLoader` 的加载示例代码片段加入本文件，或把文档合并到 `README.md`，我可以继续处理。

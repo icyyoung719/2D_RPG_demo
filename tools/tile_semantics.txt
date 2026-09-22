@@ -1,0 +1,46 @@
+# Tile semantics — single source of truth for per-tile properties.
+#
+#   regenerate:  python3 tools/gen_tile_props.py
+#   verify:      python3 tools/gen_tile_props.py --check      (CI job: tile-properties)
+#   proof sheet: python3 tools/proof_sheet.py                 (visual check, writes build/tile-proof/)
+#
+# Grammar, one directive per line, '#' starts a comment:
+#
+#   [tileset NAME]                start a section (NAME = the tileset's json "name" or file stem)
+#   wang COLOR = CLASS            every wang tile whose wangid contains COLOR
+#   anim ID = CLASS               tile ID plus every frame of its animation
+#   range rA-rB cC-cD = CLASS      inclusive tile grid rectangle (single values allowed)
+#   tile ID = CLASS               single tile, or a list: tile 3,4,5
+#   animation-inherit = yes|no    frames inherit the class of their animation's base tile
+#                                 (default yes)
+#
+# IDs are tileset-local: the tile's id inside the tileset (map gid minus that tileset's
+# firstgid), which is what Tiled shows in the status bar. Grid positions are zero-based.
+# Run tools/gen_tile_props.py --check to see the local id of every unclassified tile a map
+# uses, with its col/row and the layers that use it.
+#
+# CLASS is one of:
+#   solid     -> {"solid": true}                     blocked
+#   water     -> {"solid": true, "terrain":"water"}  blocked, tagged as water
+#   walkable  -> {"walkable": true}                  drawn, but passable
+#   empty     -> {"empty": true}                     nothing drawn
+#   ?         -> undecided; --check fails if a map uses such a tile
+#
+# Precedence: tile > range > wang > anim > animation-inherit.
+# A wang tile that mixes colours takes the most blocking class present
+# (water > solid > walkable > empty).
+#
+# Only tiles that a map in assests/Maps/ actually uses need a class; --all ignores that
+# filter. Tileset json files are rewritten by the generator: per-tile entries it does not
+# manage (animations, properties added by hand for other tools) are preserved.
+
+[tileset overworld_tileset]
+wang grass   = solid
+wang dirt    = solid
+wang sth     = solid
+wang water   = water
+anim 40      = water     # water animation: base 40, frames 40-43 and 80-83
+tile 207     = solid     # boulder on grass (map gid 208)
+
+[tileset basictiles]
+range r0 c0-c2 = solid   # brick wall pieces
